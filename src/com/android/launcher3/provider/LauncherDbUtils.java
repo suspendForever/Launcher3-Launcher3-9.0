@@ -100,6 +100,7 @@ public class LauncherDbUtils {
 
     /**
      * Parses the cursor containing workspace screens table and returns the list of screen IDs
+     * 分析包含工作区屏幕表的游标并返回屏幕 ID 列表
      */
     public static ArrayList<Long> getScreenIdsFromCursor(Cursor sc) {
         try {

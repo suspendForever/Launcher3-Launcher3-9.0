@@ -32,8 +32,10 @@ import android.net.Uri;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.SparseBooleanArray;
+
 import com.android.launcher3.AutoInstallsLayout.LayoutParserCallback;
 import com.android.launcher3.DefaultLayoutParser;
 import com.android.launcher3.LauncherAppState;
@@ -48,12 +50,15 @@ import com.android.launcher3.Utilities;
 import com.android.launcher3.Workspace;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.logging.FileLog;
 import com.android.launcher3.model.GridSizeMigrationTask;
 import com.android.launcher3.util.LongArrayMap;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Utility class to import data from another Launcher which is based on Launcher3 schema.
@@ -251,7 +256,7 @@ public class ImportDataTask {
                             values.put(Favorites.ICON_PACKAGE, c.getString(iconPackageIndex));
                             values.put(Favorites.ICON_RESOURCE, c.getString(iconResourceIndex));
                         }
-                        values.put(Favorites.ICON,  c.getBlob(iconIndex));
+                        values.put(Favorites.ICON, c.getBlob(iconIndex));
                         values.put(Favorites.INTENT, intent.toUri(0));
                         values.put(Favorites.RANK, c.getInt(rankIndex));
 
@@ -328,18 +333,23 @@ public class ImportDataTask {
 
     private static String getPackage(Intent intent) {
         return intent.getComponent() != null ? intent.getComponent().getPackageName()
-            : intent.getPackage();
+                : intent.getPackage();
     }
 
     /**
      * Performs data import if possible.
+     *
      * @return true on successful data import, false if it was not available
      * @throws Exception if the import failed
      */
     public static boolean performImportIfPossible(Context context) throws Exception {
         SharedPreferences devicePrefs = getDevicePrefs(context);
+
+        //launcher 本身没有对这两个key 有任何操作，应该是其他App写入了这个值？？？
         String sourcePackage = devicePrefs.getString(KEY_DATA_IMPORT_SRC_PKG, "");
         String sourceAuthority = devicePrefs.getString(KEY_DATA_IMPORT_SRC_AUTHORITY, "");
+        LogUtil.d(TAG, "performImportIfPossible: sourcePackage:" + sourcePackage);
+        LogUtil.d(TAG, "performImportIfPossible: sourceAuthority:" + sourceAuthority);
 
         if (TextUtils.isEmpty(sourcePackage) || TextUtils.isEmpty(sourceAuthority)) {
             return false;
@@ -347,6 +357,7 @@ public class ImportDataTask {
 
         // Synchronously clear the migration flags. This ensures that we do not try migration
         // again and thus prevents potential crash loops due to migration failure.
+        //同步清除迁移标志。这可确保我们不会再次尝试迁移，从而防止由于迁移失败而导致的潜在崩溃循环
         devicePrefs.edit().remove(KEY_DATA_IMPORT_SRC_PKG).remove(KEY_DATA_IMPORT_SRC_AUTHORITY).commit();
 
         if (!Settings.call(context.getContentResolver(), Settings.METHOD_WAS_EMPTY_DB_CREATED)
@@ -355,9 +366,10 @@ public class ImportDataTask {
             return false;
         }
 
-        for (ProviderInfo info : context.getPackageManager().queryContentProviders(
-                null, context.getApplicationInfo().uid, 0)) {
+        List<ProviderInfo> providerInfos = context.getPackageManager().queryContentProviders(null, context.getApplicationInfo().uid, 0);
+        Log.d(TAG, "performImportIfPossible: providerInfos size:" + providerInfos.size());
 
+        for (ProviderInfo info : providerInfos) {
             if (sourcePackage.equals(info.packageName)) {
                 if ((info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
                     // Only migrate if the source launcher is also on system image.

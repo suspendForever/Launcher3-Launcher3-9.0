@@ -86,30 +86,39 @@ public class LauncherModel extends BroadcastReceiver
     static final String TAG = "Launcher.Model";
 
     private final MainThreadExecutor mUiExecutor = new MainThreadExecutor();
-    @Thunk final LauncherAppState mApp;
-    @Thunk final Object mLock = new Object();
+    @Thunk
+    final LauncherAppState mApp;
+    @Thunk
+    final Object mLock = new Object();
     @Thunk
     LoaderTask mLoaderTask;
-    @Thunk boolean mIsLoaderTaskRunning;
+    @Thunk
+    boolean mIsLoaderTaskRunning;
 
-    @Thunk static final HandlerThread sWorkerThread = new HandlerThread("launcher-loader");
+    @Thunk
+    static final HandlerThread sWorkerThread = new HandlerThread("launcher-loader");
+
     static {
         sWorkerThread.start();
     }
-    @Thunk static final Handler sWorker = new Handler(sWorkerThread.getLooper());
+
+    @Thunk
+    static final Handler sWorker = new Handler(sWorkerThread.getLooper());
 
     // Indicates whether the current model data is valid or not.
     // We start off with everything not loaded. After that, we assume that
     // our monitoring of the package manager provides all updates and we never
     // need to do a requery. This is only ever touched from the loader thread.
     private boolean mModelLoaded;
+
     public boolean isModelLoaded() {
         synchronized (mLock) {
             return mModelLoaded && mLoaderTask == null;
         }
     }
 
-    @Thunk WeakReference<Callbacks> mCallbacks;
+    @Thunk
+    WeakReference<Callbacks> mCallbacks;
 
     // < only access in worker thread >
     private final AllAppsList mBgAllAppsList;
@@ -117,6 +126,7 @@ public class LauncherModel extends BroadcastReceiver
     /**
      * All the static data should be accessed on the background thread, A lock should be acquired
      * on this object when accessing any data from this model.
+     * 所有静态数据都应该在后台线程上访问，当从这个模型访问任何数据时，应该在这个对象上获取一个锁
      */
     static final BgDataModel sBgDataModel = new BgDataModel();
 
@@ -138,26 +148,45 @@ public class LauncherModel extends BroadcastReceiver
         public void rebindModel();
 
         public int getCurrentWorkspaceScreen();
+
         public void clearPendingBinds();
+
         public void startBinding();
+
         public void bindItems(List<ItemInfo> shortcuts, boolean forceAnimateIcons);
+
         public void bindScreens(ArrayList<Long> orderedScreenIds);
+
         public void finishFirstPageBind(ViewOnDrawExecutor executor);
+
         public void finishBindingItems();
+
         public void bindAllApplications(ArrayList<AppInfo> apps);
+
         public void bindAppsAddedOrUpdated(ArrayList<AppInfo> apps);
+
         public void bindAppsAdded(ArrayList<Long> newScreens,
                                   ArrayList<ItemInfo> addNotAnimated,
                                   ArrayList<ItemInfo> addAnimated);
+
         public void bindPromiseAppProgressUpdated(PromiseAppInfo app);
+
         public void bindShortcutsChanged(ArrayList<ShortcutInfo> updated, UserHandle user);
+
         public void bindWidgetsRestored(ArrayList<LauncherAppWidgetInfo> widgets);
+
         public void bindRestoreItemsChange(HashSet<ItemInfo> updates);
+
         public void bindWorkspaceComponentsRemoved(ItemInfoMatcher matcher);
+
         public void bindAppInfosRemoved(ArrayList<AppInfo> appInfos);
+
         public void bindAllWidgets(ArrayList<WidgetListRowEntry> widgets);
+
         public void onPageBoundSynchronously(int page);
+
         public void executeOnNextDraw(ViewOnDrawExecutor executor);
+
         public void bindDeepShortcutMap(MultiHashMap<ComponentKey, String> deepShortcutMap);
     }
 
@@ -166,8 +195,11 @@ public class LauncherModel extends BroadcastReceiver
         mBgAllAppsList = new AllAppsList(iconCache, appFilter);
     }
 
-    /** Runs the specified runnable immediately if called from the worker thread, otherwise it is
-     * posted on the worker thread handler. */
+    /**
+     * Runs the specified runnable immediately if called from the worker thread, otherwise it is
+     * posted on the worker thread handler.
+     * 如果从工作线程调用，则立即运行指定的 runnable，否则它将发布到工作线程处理程序上
+     */
     private static void runOnWorkerThread(Runnable r) {
         if (sWorkerThread.getThreadId() == Process.myTid()) {
             r.run();
@@ -336,14 +368,14 @@ public class LauncherModel extends BroadcastReceiver
 
     @Override
     public void onPackagesAvailable(String[] packageNames, UserHandle user,
-            boolean replacing) {
+                                    boolean replacing) {
         enqueueModelUpdateTask(
                 new PackageUpdatedTask(PackageUpdatedTask.OP_UPDATE, user, packageNames));
     }
 
     @Override
     public void onPackagesUnavailable(String[] packageNames, UserHandle user,
-            boolean replacing) {
+                                      boolean replacing) {
         if (!replacing) {
             enqueueModelUpdateTask(new PackageUpdatedTask(
                     PackageUpdatedTask.OP_UNAVAILABLE, user, packageNames));
@@ -364,12 +396,12 @@ public class LauncherModel extends BroadcastReceiver
 
     @Override
     public void onShortcutsChanged(String packageName, List<ShortcutInfoCompat> shortcuts,
-            UserHandle user) {
+                                   UserHandle user) {
         enqueueModelUpdateTask(new ShortcutsChangedTask(packageName, shortcuts, user, true));
     }
 
     public void updatePinnedShortcuts(String packageName, List<ShortcutInfoCompat> shortcuts,
-            UserHandle user) {
+                                      UserHandle user) {
         enqueueModelUpdateTask(new ShortcutsChangedTask(packageName, shortcuts, user, false));
     }
 
@@ -437,16 +469,19 @@ public class LauncherModel extends BroadcastReceiver
 
     /**
      * Starts the loader. Tries to bind {@params synchronousBindPage} synchronously if possible.
+     *
      * @return true if the page could be bound synchronously.
      */
     public boolean startLoader(int synchronousBindPage) {
         // Enable queue before starting loader. It will get disabled in Launcher#finishBindingItems
+        //在启动加载程序之前启用队列。它将在 Launcher#finishBindingItems 中被禁用
         InstallShortcutReceiver.enableInstallQueue(InstallShortcutReceiver.FLAG_LOADER_RUNNING);
         synchronized (mLock) {
             // Don't bother to start the thread if we know it's not going to do anything
             if (mCallbacks != null && mCallbacks.get() != null) {
                 final Callbacks oldCallbacks = mCallbacks.get();
                 // Clear any pending bind-runnables from the synchronized load process.
+                // 从同步加载进程中清除任何挂起的绑定可运行对象。
                 mUiExecutor.execute(oldCallbacks::clearPendingBinds);
 
                 // If there is already one running, tell it to stop.
@@ -456,9 +491,11 @@ public class LauncherModel extends BroadcastReceiver
                 if (mModelLoaded && !mIsLoaderTaskRunning) {
                     // Divide the set of loaded items into those that we are binding synchronously,
                     // and everything else that is to be bound normally (asynchronously).
+                    //将加载的项集划分为我们同步绑定的项，以及要正常（异步）绑定的所有其他项。
                     loaderResults.bindWorkspace();
                     // For now, continue posting the binding of AllApps as there are other
                     // issues that arise from that.
+                    //现在，继续发布AllApps的绑定，因为还有其他问题。
                     loaderResults.bindAllApps();
                     loaderResults.bindDeepShortcuts();
                     loaderResults.bindWidgets();
@@ -503,6 +540,7 @@ public class LauncherModel extends BroadcastReceiver
 
     /**
      * Loads the workspace screen ids in an ordered list.
+     * 在有序列表中加载工作区屏幕 ID
      */
     public static ArrayList<Long> loadWorkspaceScreensDb(Context context) {
         final ContentResolver contentResolver = context.getContentResolver();
@@ -615,7 +653,7 @@ public class LauncherModel extends BroadcastReceiver
          * Called before the task is posted to initialize the internal state.
          */
         void init(LauncherAppState app, LauncherModel model,
-                BgDataModel dataModel, AllAppsList allAppsList, Executor uiExecutor);
+                  BgDataModel dataModel, AllAppsList allAppsList, Executor uiExecutor);
 
     }
 

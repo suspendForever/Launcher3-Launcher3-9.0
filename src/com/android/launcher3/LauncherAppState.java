@@ -90,8 +90,11 @@ public class LauncherAppState {
         Preconditions.assertUIThread();
         mContext = context;
 
+        //初始化固定的设备配置
         mInvariantDeviceProfile = new InvariantDeviceProfile(mContext);
+        //初始化图标管理工具
         mIconCache = new IconCache(mContext, mInvariantDeviceProfile);
+        //初始化Widget加载混存工具
         mWidgetCache = new WidgetPreviewLoader(mContext, mIconCache);
         mModel = new LauncherModel(this, mIconCache, AppFilter.newInstance(mContext));
 
@@ -147,6 +150,7 @@ public class LauncherAppState {
     }
 
     LauncherModel setLauncher(Launcher launcher) {
+        //设置给provider，方便操作
         getLocalProvider(mContext).setLauncherProviderChangeListener(launcher);
         mModel.initialize(launcher);
         return mModel;

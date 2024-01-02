@@ -215,6 +215,7 @@ public class DeepShortcutManager {
             }
             List<ShortcutInfo> shortcutInfos = null;
             try {
+                //获取固定快捷方式信息 ，但是从断点来看 数量为0
                 shortcutInfos = mLauncherApps.getShortcuts(q, user);
                 mWasLastCallSuccess = true;
             } catch (SecurityException|IllegalStateException e) {

@@ -75,6 +75,7 @@ public class LoaderResults {
     }
 
     /**
+     * 将所有加载的数据绑定到主线程上的实际视图
      * Binds all loaded data to actual views on the main thread.
      */
     public void bindWorkspace() {

@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 所有数据都存储在内存中并由 LauncherModel 管理
  * All the data stored in-memory and managed by the LauncherModel
  */
 public class BgDataModel {

@@ -50,6 +50,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Layout parsing code for auto installs layout
+ * 自动安装布局的布局解析代码
  */
 public class AutoInstallsLayout {
     private static final String TAG = "AutoInstalls";
@@ -68,6 +69,7 @@ public class AutoInstallsLayout {
 
     static AutoInstallsLayout get(Context context, AppWidgetHost appWidgetHost,
             LayoutParserCallback callback) {
+        //ACTION_LAUNCHER_CUSTOMIZATION 注册这个action广播的一般也为null
         Pair<String, Resources> customizationApkInfo = Utilities.findSystemApk(
                 ACTION_LAUNCHER_CUSTOMIZATION, context.getPackageManager());
         if (customizationApkInfo == null) {

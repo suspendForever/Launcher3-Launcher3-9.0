@@ -301,7 +301,7 @@ public final class Utilities {
         }
     }
 
-    /*
+    /* 查找具有注册特定action的广播的apk
      * Finds a system apk which had a broadcast receiver listening to a particular action.
      * @param action intent action used to find the apk
      * @return a pair of apk package name and the resources.

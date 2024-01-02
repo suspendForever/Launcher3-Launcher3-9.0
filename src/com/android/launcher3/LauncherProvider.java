@@ -84,6 +84,9 @@ public class LauncherProvider extends ContentProvider {
 
     public static final String AUTHORITY = FeatureFlags.AUTHORITY;
 
+    /**
+     * 创建了空的lancher数据库
+     */
     static final String EMPTY_DATABASE_CREATED = "EMPTY_DATABASE_CREATED";
 
     private static final String RESTRICTION_PACKAGE_NAME = "workspace.configuration.package.name";
@@ -450,40 +453,59 @@ public class LauncherProvider extends ContentProvider {
      *   2) From a package provided by play store
      *   3) From a partner configuration APK, already in the system image
      *   4) The default configuration for the particular device
+     *   根据以下优先级方案加载默认工作区：
+     *   1） 从应用限制
+     *   2） 从 Play 商店提供的软件包
+     *   3） 从系统映像中已有的合作伙伴配置 APK
+     *   4） 特定设备的默认配置
      */
     synchronized private void loadDefaultFavoritesIfNecessary() {
         SharedPreferences sp = Utilities.getPrefs(getContext());
+
 
         if (sp.getBoolean(EMPTY_DATABASE_CREATED, false)) {
             Log.d(TAG, "loading default workspace");
 
             AppWidgetHost widgetHost = mOpenHelper.newLauncherWidgetHost();
+            //从应用限制中列出的 XML 资源创建工作区加载程序 一般都为null
             AutoInstallsLayout loader = createWorkspaceLoaderFromAppRestriction(widgetHost);
             if (loader == null) {
+                //一般为null
+                //根据Play 商店提供的软件包 读取默认配置
                 loader = AutoInstallsLayout.get(getContext(),widgetHost, mOpenHelper);
             }
+            //一般为null 走进去
             if (loader == null) {
                 final Partner partner = Partner.get(getContext().getPackageManager());
+                //一般parter还是为null 走不进去
                 if (partner != null && partner.hasDefaultLayout()) {
                     final Resources partnerRes = partner.getResources();
                     int workspaceResId = partnerRes.getIdentifier(Partner.RES_DEFAULT_LAYOUT,
                             "xml", partner.getPackageName());
                     if (workspaceResId != 0) {
+                        //根据系统映像中已有的合作伙伴配置 APK 读取默认配置
                         loader = new DefaultLayoutParser(getContext(), widgetHost,
                                 mOpenHelper, partnerRes, workspaceResId);
                     }
                 }
             }
 
+            //当loader不为空时 使用外部提供布局
             final boolean usingExternallyProvidedLayout = loader != null;
             if (loader == null) {
+                //loader还是null
+                // 在这个地方读取app中配置的xml资源  加载默认系统配置
                 loader = getDefaultLayoutParser(widgetHost);
             }
 
+
             // There might be some partially restored DB items, due to buggy restore logic in
             // previous versions of launcher.
+            //由于以前版本的启动器中的还原逻辑错误，可能会有一些部分还原的数据库项。
+            //清除所有数据以重新开始。
             mOpenHelper.createEmptyDB(mOpenHelper.getWritableDatabase());
             // Populate favorites table with initial favorites
+            //使用初始收藏夹表填充收藏夹表
             if ((mOpenHelper.loadFavorites(mOpenHelper.getWritableDatabase(), loader) <= 0)
                     && usingExternallyProvidedLayout) {
                 // Unable to load external layout. Cleanup and load the internal layout.
@@ -497,6 +519,7 @@ public class LauncherProvider extends ContentProvider {
 
     /**
      * Creates workspace loader from an XML resource listed in the app restrictions.
+     * 从应用限制中列出的 XML 资源创建工作区加载程序
      *
      * @return the loader if the restrictions are set and the resource exists; null otherwise.
      */
@@ -817,6 +840,7 @@ public class LauncherProvider extends ContentProvider {
 
         /**
          * Clears all the data for a fresh start.
+         * 清除所有数据以重新开始。
          */
         public void createEmptyDB(SQLiteDatabase db) {
             try (SQLiteTransaction t = new SQLiteTransaction(db)) {
@@ -1044,6 +1068,7 @@ public class LauncherProvider extends ContentProvider {
             return getMaxId(db, WorkspaceScreens.TABLE_NAME);
         }
 
+        //根据app内布局配置loader去更新数据库
         @Thunk int loadFavorites(SQLiteDatabase db, AutoInstallsLayout loader) {
             ArrayList<Long> screenIds = new ArrayList<Long>();
             // TODO: Use multiple loaders with fall-back and transaction.
