@@ -135,6 +135,10 @@ public class LoaderCursor extends CursorWrapper {
         return result;
     }
 
+    /**
+     * 将uri字符串转为intent.
+     * @return
+     */
     public Intent parseIntent() {
         String intentDescription = getString(intentIndex);
         try {
@@ -322,6 +326,7 @@ public class LoaderCursor extends CursorWrapper {
 
     /**
      * Marks the current item as restored
+     * 将当前项目标记为已恢复
      */
     public void markRestored() {
         if (restoreFlag != 0) {

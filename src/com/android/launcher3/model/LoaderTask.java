@@ -315,7 +315,7 @@ public class LoaderTask implements Runnable {
 
                     // We can only query for shortcuts when the user is unlocked.
                     if (userUnlocked) {
-                        //固定的快捷方式
+                        //固定的快捷方式列表 一般为0
                         List<ShortcutInfoCompat> pinnedShortcuts =
                                 mShortcutManager.queryForPinnedShortcuts(null, user);
                         if (mShortcutManager.wasLastCallSuccess()) {
@@ -340,8 +340,10 @@ public class LoaderTask implements Runnable {
 
                 FolderIconPreviewVerifier verifier =
                         new FolderIconPreviewVerifier(mApp.getInvariantDeviceProfile());
+                //循环遍历数据库的数据
                 while (!mStopped && loaderCursor.moveToNext()) {
                     try {
+                        //如果user为空 直接跳过这条数据
                         if (loaderCursor.user == null) {
                             // User has been deleted, remove the item.
                             loaderCursor.markDeleted("User has been deleted");
@@ -355,6 +357,7 @@ public class LoaderTask implements Runnable {
                             case LauncherSettings.Favorites.ITEM_TYPE_DEEP_SHORTCUT:
                                 //url转换为intent
                                 intent = loaderCursor.parseIntent();
+                                //如果intent 为空 跳过这次循环
                                 if (intent == null) {
                                     loaderCursor.markDeleted("Invalid or null intent");
                                     continue;
@@ -365,16 +368,20 @@ public class LoaderTask implements Runnable {
                                 ComponentName cn = intent.getComponent();
                                 targetPkg = cn == null ? intent.getPackage() : cn.getPackageName();
 
+                                //如果该数据的user不是当前user
                                 if (!Process.myUserHandle().equals(loaderCursor.user)) {
+                                    //非当前user 如果该条数据是快捷方式 删除这条数据
                                     if (loaderCursor.itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT) {
                                         loaderCursor.markDeleted("Legacy shortcuts are only allowed for default user");
                                         continue;
                                     } else if (loaderCursor.restoreFlag != 0) {
                                         // Don't restore items for other profiles.
+                                        //如果这条数据的restoreflag不为0 删除这条数据
                                         loaderCursor.markDeleted("Restore from managed profile not supported");
                                         continue;
                                     }
                                 }
+                                //如果intent的所含包名为空而且这条数据不是快捷方式 删除这条数据
                                 if (TextUtils.isEmpty(targetPkg) &&
                                         loaderCursor.itemType != LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT) {
                                     loaderCursor.markDeleted("Only legacy shortcuts can have null package");
@@ -382,17 +389,21 @@ public class LoaderTask implements Runnable {
                                 }
 
                                 // If there is no target package, its an implicit intent
+                                //如果没有目标包，这是一个隐含的意图
                                 // (legacy shortcut) which is always valid
+                                //（传统快捷方式）始终有效
                                 boolean validTarget = TextUtils.isEmpty(targetPkg) ||
                                         mLauncherApps.isPackageEnabledForProfile(targetPkg, loaderCursor.user);
 
                                 if (cn != null && validTarget) {
-                                    // If the apk is present and the shortcut points to a specific
-                                    // component.
+                                        // If the apk is present and the shortcut points to a specific component.
+                                    //如果apk存在并且快捷方式指向特定组件。
 
                                     // If the component is already present
+                                    //如果当前component存在
                                     if (mLauncherApps.isActivityEnabledForProfile(cn, loaderCursor.user)) {
                                         // no special handling necessary for this item
+                                        //将该项数据标记为恢复
                                         loaderCursor.markRestored();
                                     } else {
                                         if (loaderCursor.hasRestoreFlag(ShortcutInfo.FLAG_AUTOINSTALL_ICON)) {
