@@ -354,7 +354,7 @@ public class LoaderTask implements Runnable {
                         switch (loaderCursor.itemType) {
                             case LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT:
                             case LauncherSettings.Favorites.ITEM_TYPE_APPLICATION:
-                            case LauncherSettings.Favorites.ITEM_TYPE_DEEP_SHORTCUT:
+                            case LauncherSettings.Favorites.ITEM_TYPE_DEEP_SHORTCUT: {
                                 //url转换为intent
                                 intent = loaderCursor.parseIntent();
                                 //如果intent 为空 跳过这次循环
@@ -389,27 +389,30 @@ public class LoaderTask implements Runnable {
                                 }
 
                                 // If there is no target package, its an implicit intent
-                                //如果没有目标包，这是一个隐含的意图
+                                //如果没有目标包，这是一个隐式意图
                                 // (legacy shortcut) which is always valid
                                 //（传统快捷方式）始终有效
                                 boolean validTarget = TextUtils.isEmpty(targetPkg) ||
                                         mLauncherApps.isPackageEnabledForProfile(targetPkg, loaderCursor.user);
 
-                                if (cn != null && validTarget) {
-                                        // If the apk is present and the shortcut points to a specific component.
-                                    //如果apk存在并且快捷方式指向特定组件。
 
-                                    // If the component is already present
-                                    //如果当前component存在
+                                // If the apk is present and the shortcut points to a specific component.
+                                //如果apk存在并且快捷方式指向特定组件。
+                                // If the component is already present
+                                //如果当前component存在
+                                if (cn != null && validTarget) {
+                                    //如果这条数据activity 存在
                                     if (mLauncherApps.isActivityEnabledForProfile(cn, loaderCursor.user)) {
                                         // no special handling necessary for this item
                                         //将该项数据标记为恢复
                                         loaderCursor.markRestored();
                                     } else {
                                         if (loaderCursor.hasRestoreFlag(ShortcutInfo.FLAG_AUTOINSTALL_ICON)) {
-                                            // We allow auto install apps to have their intent
-                                            // updated after an install.
+                                            // We allow auto install apps to have their intent updated after an install.
+                                            //我们允许自动安装应用程序在安装后更新其意图
                                             intent = pmHelper.getAppLaunchIntent(targetPkg, loaderCursor.user);
+
+                                            //如果这个数据没有launcherIntent 删掉
                                             if (intent != null) {
                                                 loaderCursor.restoreFlag = 0;
                                                 loaderCursor.updater().put(
@@ -421,6 +424,7 @@ public class LoaderTask implements Runnable {
                                                 continue;
                                             }
                                         } else {
+                                            //说明该条数据的隐式意图无效
                                             // The app is installed but the component is no
                                             // longer available.
                                             loaderCursor.markDeleted("Invalid component removed: " + cn);
@@ -432,10 +436,11 @@ public class LoaderTask implements Runnable {
                                 // else if !validPkg => could be restored icon or missing sd-card
 
                                 if (!TextUtils.isEmpty(targetPkg) && !validTarget) {
-                                    // Points to a valid app (superset of cn != null) but the apk
-                                    // is not available.
+                                    //说明该条数据是一个有效的应用程序但apk不可用。
+                                    // Points to a valid app (superset of cn != null) but the apk is not available.
 
                                     if (loaderCursor.restoreFlag != 0) {
+                                        //程序包尚不可用，但可能稍后安装
                                         // Package is not yet available but might be
                                         // installed later.
                                         FileLog.d(TAG, "package not yet restored: " + targetPkg);
@@ -444,54 +449,67 @@ public class LoaderTask implements Runnable {
                                             // Restore has started once.
                                         } else if (installingPkgs.containsKey(targetPkg)) {
                                             // App restore has started. Update the flag
+                                            //如果目标包正在安装 标记为restore 更新数据库
                                             loaderCursor.restoreFlag |= ShortcutInfo.FLAG_RESTORE_STARTED;
                                             loaderCursor.updater().commit();
                                         } else {
+                                            //说明这个包不会恢复了 删除
                                             loaderCursor.markDeleted("Unrestored app removed: " + targetPkg);
                                             continue;
                                         }
                                     } else if (pmHelper.isAppOnSdcard(targetPkg, loaderCursor.user)) {
                                         // Package is present but not available.
+                                        // 包存在，但不可用。
                                         disabledState |= ShortcutInfo.FLAG_DISABLED_NOT_AVAILABLE;
                                         // Add the icon on the workspace anyway.
+                                        //在工作区中添加图标。
                                         allowMissingTarget = true;
                                     } else if (!isSdCardReady) {
                                         // SdCard is not ready yet. Package might get available,
+                                        //SdCard尚未准备好。包可能可用，
                                         // once it is ready.
                                         Log.d(TAG, "Missing pkg, will check later: " + targetPkg);
                                         pendingPackages.addToList(loaderCursor.user, targetPkg);
                                         // Add the icon on the workspace anyway.
+                                        //在工作区中添加图标。
                                         allowMissingTarget = true;
                                     } else {
+                                        //不再等待外部设备加载。 删除
                                         // Do not wait for external media load anymore.
                                         loaderCursor.markDeleted("Invalid package removed: " + targetPkg);
                                         continue;
                                     }
                                 }
 
+                                //这条数据可能稍后安装而且支持webui
                                 if ((loaderCursor.restoreFlag & ShortcutInfo.FLAG_SUPPORTS_WEB_UI) != 0) {
+                                    //说明不是隐式意图
                                     validTarget = false;
                                 }
 
                                 if (validTarget) {
                                     // The shortcut points to a valid target (either no target
                                     // or something which is ready to be used)
+                                    //快捷方式指向一个有效的目标（要么没有目标，要么是准备使用的东西）标记为恢复
                                     loaderCursor.markRestored();
                                 }
 
                                 boolean useLowResIcon = !loaderCursor.isOnWorkspaceOrHotseat() &&
                                         !verifier.isItemInPreview(loaderCursor.getInt(rankIndex));
 
+                                // 已在上面验证该用户与默认用户相同
+                                //从现在开始获取生成该条数据的shortcutinfo 添加到数据model中
                                 if (loaderCursor.restoreFlag != 0) {
-                                    // Already verified above that user is same as default user
+                                    //生成restoredinfo 表示该info为系统上尚未安装的程序包。
                                     info = loaderCursor.getRestoredItemInfo(intent);
                                 } else if (loaderCursor.itemType ==
                                         LauncherSettings.Favorites.ITEM_TYPE_APPLICATION) {
+                                    //为应用程序的快捷方式创建ShortcutInfo对象。
                                     info = loaderCursor.getAppShortcutInfo(
                                             intent, allowMissingTarget, useLowResIcon);
                                 } else if (loaderCursor.itemType ==
                                         LauncherSettings.Favorites.ITEM_TYPE_DEEP_SHORTCUT) {
-
+                                    //创建固定快捷方式的shortcutInfo
                                     ShortcutKey key = ShortcutKey.fromIntent(intent, loaderCursor.user);
                                     if (unlockedUsers.get(loaderCursor.serialNumber)) {
                                         ShortcutInfoCompat pinnedShortcut =
@@ -548,6 +566,7 @@ public class LoaderTask implements Runnable {
                                     }
                                 }
 
+                                //将创建的shortcutinfo 添加一些属性 然后加到数据model中
                                 if (info != null) {
                                     loaderCursor.applyCommonProperties(info);
 
@@ -574,6 +593,7 @@ public class LoaderTask implements Runnable {
                                     throw new RuntimeException("Unexpected null ShortcutInfo");
                                 }
                                 break;
+                            }
 
                             case LauncherSettings.Favorites.ITEM_TYPE_FOLDER:
                                 FolderInfo folderInfo = mBgDataModel.findOrMakeFolder(loaderCursor.id);

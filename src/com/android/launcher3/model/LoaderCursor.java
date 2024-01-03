@@ -209,6 +209,7 @@ public class LoaderCursor extends CursorWrapper {
     /**
      * Make an ShortcutInfo object for a restored application or shortcut item that points
      * to a package that is not yet installed on the system.
+     * 为还原的应用程序或快捷方式项创建ShortcutInfo对象，该对象指向系统上尚未安装的程序包。
      */
     public ShortcutInfo getRestoredItemInfo(Intent intent) {
         final ShortcutInfo info = new ShortcutInfo();
