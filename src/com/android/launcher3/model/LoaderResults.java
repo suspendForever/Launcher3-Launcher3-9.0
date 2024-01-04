@@ -130,13 +130,11 @@ public class LoaderResults {
         sortWorkspaceItemsSpatially(otherWorkspaceItems);
 
         // Tell the workspace that we're about to start binding items
-        r = new Runnable() {
-            public void run() {
-                Callbacks callbacks = mCallbacks.get();
-                if (callbacks != null) {
-                    callbacks.clearPendingBinds();
-                    callbacks.startBinding();
-                }
+        r = () -> {
+            Callbacks callbacks1 = mCallbacks.get();
+            if (callbacks1 != null) {
+                callbacks1.clearPendingBinds();
+                callbacks1.startBinding();
             }
         };
         mUiExecutor.execute(r);

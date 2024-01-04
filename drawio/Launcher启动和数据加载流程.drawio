@@ -1,10 +1,10 @@
-<mxfile host="Electron" modified="2023-12-28T08:30:30.675Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.11 Chrome/114.0.5735.289 Electron/25.9.8 Safari/537.36" etag="LVunVDcks8C5wB4eYVFO" version="22.1.11" type="device">
+<mxfile host="Electron" modified="2024-01-04T02:09:04.458Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.16 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="e1DUltecteTb-KvvDAR_" version="22.1.16" type="device" pages="2">
   <diagram name="第 1 页" id="1HOwUN-togeC1dHWims-">
-    <mxGraphModel dx="2421" dy="1398" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="4116" dy="2187" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="peywiYu0eEz0mTbWbGgo-1" value="LoadWorkSpace" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="peywiYu0eEz0mTbWbGgo-1" value="LoadWorkSpace" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="60" y="790" width="1660" height="610" as="geometry" />
         </mxCell>
         <mxCell id="MXK9G8clE4YLnquWBK-m-1" value="" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;" parent="1" vertex="1">
@@ -240,6 +240,212 @@
         </mxCell>
         <mxCell id="-KqBy4kUO3fDHoM9qp73-3" value="通知provider 导入默认工作区" style="shape=note;size=20;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="800" y="1160" width="230" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="B2eGMKUh4kL4IXJ1z3uM" name="第 2 页">
+    <mxGraphModel dx="1617" dy="859" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5000" pageHeight="5000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-1" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;遍历数据库数&lt;br&gt;据 loaderCursor.moveToNext()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="110" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-6" target="W6dMInHwPeEZXt9kIaJ2-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-6" value="ITEM_TYPE_SHORTCUT:&lt;br&gt;ITEM_TYPE_APPLICATION:&lt;br&gt;ITEM_TYPE_DEEP_SHORTCUT:" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="200" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-8" target="W6dMInHwPeEZXt9kIaJ2-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1040" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-8" target="W6dMInHwPeEZXt9kIaJ2-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-8" value="intent 是否为空" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="340" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-11" target="W6dMInHwPeEZXt9kIaJ2-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1200" y="130" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1110" y="550" />
+              <mxPoint x="1290" y="550" />
+              <mxPoint x="1290" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-11" value="这条数据标为删除&lt;br&gt;markDeleted(&quot;Invalid or null intent&quot;);" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="430" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-14" target="W6dMInHwPeEZXt9kIaJ2-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-14" value="ComponentName cn = intent.getComponent();&lt;br&gt;&amp;nbsp;targetPkg = cn == null ? intent.getPackage() : cn.getPackageName();&lt;br&gt;获取该条数据component和目标包名" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="757.5" y="520" width="265" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-17" target="W6dMInHwPeEZXt9kIaJ2-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-17" target="W6dMInHwPeEZXt9kIaJ2-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-17" value="该条数据的user是否为当前user" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="630" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-19" target="W6dMInHwPeEZXt9kIaJ2-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-19" target="W6dMInHwPeEZXt9kIaJ2-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-19" value="该条数据是否是ITEM_TYPE_SHORTCUT:" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1022.5" y="710" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-21" value="是" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="985" y="350" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-22" value="否" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="900" y="420" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-23" target="W6dMInHwPeEZXt9kIaJ2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-23" value="这条数据标为删除&lt;br&gt;markDeleted(&quot;Legacy shortcuts are only allowed for default user&quot;);" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="820" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-27" value="是" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1212.5" y="720" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-28" target="W6dMInHwPeEZXt9kIaJ2-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-28" target="W6dMInHwPeEZXt9kIaJ2-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-28" value="这条数据的restoreflag是否不为0" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1022.5" y="910" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-30" target="W6dMInHwPeEZXt9kIaJ2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-30" value="这条数据标为删除&lt;br&gt;markDeleted(&quot;Restore from managed profile not supported&quot;);" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1020" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-32" value="是" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="920" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-34" value="否" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="790" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-36" target="W6dMInHwPeEZXt9kIaJ2-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-36" target="W6dMInHwPeEZXt9kIaJ2-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-36" value="如果该条数据的目标包targetpackage为空并且不是&lt;br&gt;ITEM_TYPE_SHORTCUT" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="1150" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-39" value="否" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="962.5" y="920" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-41" target="W6dMInHwPeEZXt9kIaJ2-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1400" y="1300" />
+              <mxPoint x="1400" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-41" value="这条数据标为删除&lt;br&gt;loaderCursor.markDeleted(&quot;Only legacy shortcuts can have null package&quot;);" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="1270" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-44" target="W6dMInHwPeEZXt9kIaJ2-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-44" value="&amp;nbsp;boolean validTarget =TextUtils.isEmpty(targetPkg) ||&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; mLauncherApps.isPackageEnabledForProfile(targetPkg, loaderCursor.user);&lt;br&gt;如果目标包为空或者目标包不为空但包存在可以判断是否是隐式意图" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="705" y="1380" width="370" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-46" target="W6dMInHwPeEZXt9kIaJ2-50">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1135" y="1640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-46">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="889.5555555555557" y="2080" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-46" value="if (cn != null &amp;amp;&amp;amp; validTarget)&lt;br&gt;如果这条数据的component存在并且可能是隐式意图" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="1510" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-50" target="W6dMInHwPeEZXt9kIaJ2-53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-50" target="W6dMInHwPeEZXt9kIaJ2-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-50" value="if (mLauncherApps.isActivityEnabledForProfile(cn, loaderCursor.user))&lt;br&gt;如果这条数据activity 存在" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="1620" width="340" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-51" target="W6dMInHwPeEZXt9kIaJ2-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-51" value="markRestored" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="962.5" y="1760" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-53" target="W6dMInHwPeEZXt9kIaJ2-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-53" target="W6dMInHwPeEZXt9kIaJ2-60">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-53" value="if(loaderCursor.hasRestoreFlag(ShortcutInfo.FLAG_AUTOINSTALL_ICON))&lt;br&gt;表示该数据可能会稍后安装" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1115" y="1850" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-55" target="W6dMInHwPeEZXt9kIaJ2-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-55" value="为该item添加launcheIntent" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="1970" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-57" value="是" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1022.5" y="1710" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-58" value="是" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="1510" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-59" value="是" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="1940" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-60" target="W6dMInHwPeEZXt9kIaJ2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-60" value="loaderCursor.markDeleted(&quot;Invalid component removed: &quot; + cn);" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="1970" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-63" value="否" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="1775" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-64" value="否" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1450" y="1860" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="W6dMInHwPeEZXt9kIaJ2-67" target="W6dMInHwPeEZXt9kIaJ2-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-67" value="&amp;nbsp;if (!TextUtils.isEmpty(targetPkg) &amp;amp;&amp;amp; !validTarget)&amp;nbsp;&lt;br&gt;说明是一个显示意图" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="2080" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-69" value="&amp;nbsp; if (loaderCursor.restoreFlag != 0)程序包尚不可用，但可能稍后安装" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="2200" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="W6dMInHwPeEZXt9kIaJ2-72" value="if (installingPkgs.containsKey(targetPkg))如果目标包正在安装&amp;nbsp;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="777.5" y="2300" width="225" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

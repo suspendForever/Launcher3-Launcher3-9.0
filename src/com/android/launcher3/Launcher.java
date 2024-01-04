@@ -1799,6 +1799,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
     @Override
     public void bindScreens(ArrayList<Long> orderedScreenIds) {
         // Make sure the first screen is always at the start.
+        //确保第一个屏幕始终位于起始位置
         if (FeatureFlags.QSB_ON_FIRST_SCREEN &&
                 orderedScreenIds.indexOf(Workspace.FIRST_SCREEN_ID) != 0) {
             orderedScreenIds.remove(Workspace.FIRST_SCREEN_ID);
@@ -1806,6 +1807,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
             LauncherModel.updateWorkspaceScreenOrder(this, orderedScreenIds);
         } else if (!FeatureFlags.QSB_ON_FIRST_SCREEN && orderedScreenIds.isEmpty()) {
             // If there are no screens, we need to have an empty screen
+            //如果没有屏幕，我们需要一个空屏幕
             mWorkspace.addExtraEmptyScreen();
         }
         bindAddScreens(orderedScreenIds);
@@ -1813,6 +1815,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
         // After we have added all the screens, if the wallpaper was locked to the default state,
         // then notify to indicate that it can be released and a proper wallpaper offset can be
         // computed before the next layout
+        //在我们添加了所有屏幕后，如果壁纸被锁定到默认状态，则通知以指示它可以被释放，并且可以在下一个布局之前计算适当的壁纸偏移量
         mWorkspace.unlockWallpaperFromDefaultPageOnNextLayout();
     }
 
@@ -1822,6 +1825,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
             long screenId = orderedScreenIds.get(i);
             if (!FeatureFlags.QSB_ON_FIRST_SCREEN || screenId != Workspace.FIRST_SCREEN_ID) {
                 // No need to bind the first screen, as its always bound.
+                //不需要绑定第一个屏幕，因为它总是绑定的
                 mWorkspace.insertNewWorkspaceScreenBeforeEmptyScreen(screenId);
             }
         }

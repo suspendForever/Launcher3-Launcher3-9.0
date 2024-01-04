@@ -436,7 +436,7 @@ public class LoaderTask implements Runnable {
                                 // else if !validPkg => could be restored icon or missing sd-card
 
                                 if (!TextUtils.isEmpty(targetPkg) && !validTarget) {
-                                    //说明该条数据是一个有效的应用程序但apk不可用。
+                                    //说明是一个显示意图
                                     // Points to a valid app (superset of cn != null) but the apk is not available.
 
                                     if (loaderCursor.restoreFlag != 0) {
@@ -753,8 +753,10 @@ public class LoaderTask implements Runnable {
             }
 
             // Remove dead items
+            //删除标记为删除的数据
             if (loaderCursor.commitDeleted()) {
                 // Remove any empty folder
+                //删除空文件夹
                 ArrayList<Long> deletedFolderIds = (ArrayList<Long>) LauncherSettings.Settings
                         .call(contentResolver,
                                 LauncherSettings.Settings.METHOD_DELETE_EMPTY_FOLDERS)
