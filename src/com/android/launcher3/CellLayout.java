@@ -119,6 +119,7 @@ public class CellLayout extends ViewGroup {
 
     // These arrays are used to implement the drag visualization on x-large screens.
     // They are used as circular arrays, indexed by mDragOutlineCurrent.
+    //这些数组用于在 x-large 屏幕上实现拖动可视化。它们用作圆形数组，由 mDragOutlineCurrent 索引
     @Thunk final Rect[] mDragOutlines = new Rect[4];
     @Thunk final float[] mDragOutlineAlphas = new float[mDragOutlines.length];
     private final InterruptibleInOutAnimator[] mDragOutlineAnims =
@@ -186,6 +187,15 @@ public class CellLayout extends ViewGroup {
         this(context, attrs, 0);
     }
 
+    /**
+     * 获取Launcher引用
+     * 获取Launcher中的DeviceProfile信息，比如行数列数
+     * 初始化一些和拖拽相关的数据以及动效
+     * 将ShortcutAndWidgetContainer {@link ShortcutAndWidgetContainer}添加到celllayout
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public CellLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CellLayout, defStyle, 0);
@@ -194,6 +204,7 @@ public class CellLayout extends ViewGroup {
 
         // A ViewGroup usually does not draw, but CellLayout needs to draw a rectangle to show
         // the user where a dragged item will land when dropped.
+        //ViewGroup 通常不绘制，但 CellLayout 需要绘制一个矩形，以向用户显示拖放项时拖动的项将落在何处。
         setWillNotDraw(false);
         setClipToPadding(false);
         mLauncher = Launcher.getLauncher(context);
@@ -224,6 +235,7 @@ public class CellLayout extends ViewGroup {
         mReorderPreviewAnimationMagnitude = (REORDER_PREVIEW_MAGNITUDE * grid.iconSizePx);
 
         // Initialize the data structures used for the drag visualization.
+        //初始化用于拖动可视化的数据结构。
         mEaseOutInterpolator = Interpolators.DEACCEL_2_5; // Quint ease out
         mDragCell[0] = mDragCell[1] = -1;
         for (int i = 0; i < mDragOutlines.length; i++) {
@@ -235,6 +247,8 @@ public class CellLayout extends ViewGroup {
         // where the item will land. The outlines gradually fade out, leaving a trail
         // behind the drag path.
         // Set up all the animations that are used to implement this fading.
+        //在主屏幕上拖动内容时，我们会显示项目将落到何处的绿色轮廓。
+        //轮廓逐渐淡出，在拖曳路径后面留下痕迹。设置用于实现此淡入淡出的所有动画。
         final int duration = res.getInteger(R.integer.config_dragOutlineFadeTime);
         final float fromAlphaValue = 0;
         final float toAlphaValue = (float)res.getInteger(R.integer.config_dragOutlineMaxAlpha);
@@ -252,6 +266,7 @@ public class CellLayout extends ViewGroup {
 
                     // If an animation is started and then stopped very quickly, we can still
                     // get spurious updates we've cleared the tag. Guard against this.
+                    //如果动画开始然后非常快地停止，我们仍然可以获得已清除标记的虚假更新。防止这种情况发生。
                     if (outline == null) {
                         if (LOGD) {
                             Object val = animation.getAnimatedValue();
@@ -268,6 +283,7 @@ public class CellLayout extends ViewGroup {
             });
             // The animation holds a reference to the drag outline bitmap as long is it's
             // running. This way the bitmap can be GCed when the animations are complete.
+            //只要动画正在运行，动画就会保留对拖动轮廓位图的引用。这样，当动画完成时，可以对位图进行 GCed。
             anim.getAnimator().addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {

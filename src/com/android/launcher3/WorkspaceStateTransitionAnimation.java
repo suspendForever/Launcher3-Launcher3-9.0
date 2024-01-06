@@ -120,6 +120,16 @@ public class WorkspaceStateTransitionAnimation {
                 NO_ANIM_PROPERTY_SETTER, new AnimatorSetBuilder(), new AnimationConfig());
     }
 
+    /**
+     * 和动效有关 待研究
+     * @param state
+     * @param cl
+     * @param childIndex
+     * @param pageAlphaProvider
+     * @param propertySetter
+     * @param builder
+     * @param config
+     */
     private void applyChildState(LauncherState state, CellLayout cl, int childIndex,
             PageAlphaProvider pageAlphaProvider, PropertySetter propertySetter,
             AnimatorSetBuilder builder, AnimationConfig config) {

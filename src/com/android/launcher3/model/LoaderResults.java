@@ -65,7 +65,7 @@ public class LoaderResults {
     private final WeakReference<Callbacks> mCallbacks;
 
     public LoaderResults(LauncherAppState app, BgDataModel dataModel,
-            AllAppsList allAppsList, int pageToBindFirst, WeakReference<Callbacks> callbacks) {
+                         AllAppsList allAppsList, int pageToBindFirst, WeakReference<Callbacks> callbacks) {
         mUiExecutor = new MainThreadExecutor();
         mApp = app;
         mBgDataModel = dataModel;
@@ -122,10 +122,15 @@ public class LoaderResults {
         ArrayList<LauncherAppWidgetInfo> currentAppWidgets = new ArrayList<>();
         ArrayList<LauncherAppWidgetInfo> otherAppWidgets = new ArrayList<>();
 
+        //过滤当前页和其他页的App的ItemInfo信息
         filterCurrentWorkspaceItems(currentScreenId, workspaceItems, currentWorkspaceItems,
                 otherWorkspaceItems);
+
+        //过滤当前页和其他页的Widget的ItemInfo信息
         filterCurrentWorkspaceItems(currentScreenId, appWidgets, currentAppWidgets,
                 otherAppWidgets);
+
+        //对iteminfo进行按照页数的从上到下 从左到右的排序
         sortWorkspaceItemsSpatially(currentWorkspaceItems);
         sortWorkspaceItemsSpatially(otherWorkspaceItems);
 
@@ -140,13 +145,10 @@ public class LoaderResults {
         mUiExecutor.execute(r);
 
         // Bind workspace screens
-        mUiExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Callbacks callbacks = mCallbacks.get();
-                if (callbacks != null) {
-                    callbacks.bindScreens(orderedScreenIds);
-                }
+        mUiExecutor.execute(() -> {
+            Callbacks callbacks12 = mCallbacks.get();
+            if (callbacks12 != null) {
+                callbacks12.bindScreens(orderedScreenIds);
             }
         });
 
@@ -206,12 +208,14 @@ public class LoaderResults {
     }
 
 
-    /** Filters the set of items who are directly or indirectly (via another container) on the
-     * specified screen. */
+    /**
+     * Filters the set of items who are directly or indirectly (via another container) on the
+     * specified screen.
+     */
     public static <T extends ItemInfo> void filterCurrentWorkspaceItems(long currentScreenId,
-            ArrayList<T> allWorkspaceItems,
-            ArrayList<T> currentScreenItems,
-            ArrayList<T> otherScreenItems) {
+                                                                        ArrayList<T> allWorkspaceItems,
+                                                                        ArrayList<T> currentScreenItems,
+                                                                        ArrayList<T> otherScreenItems) {
         // Purge any null ItemInfos
         Iterator<T> iter = allWorkspaceItems.iterator();
         while (iter.hasNext()) {
@@ -253,8 +257,11 @@ public class LoaderResults {
         }
     }
 
-    /** Sorts the set of items by hotseat, workspace (spatially from top to bottom, left to
-     * right) */
+    /**
+     * Sorts the set of items by hotseat, workspace (spatially from top to bottom, left to
+     * right)
+     * 按热座、工作区对项目集进行排序（在空间上从上到下、从左到右）
+     */
     private void sortWorkspaceItemsSpatially(ArrayList<ItemInfo> workspaceItems) {
         final InvariantDeviceProfile profile = mApp.getInvariantDeviceProfile();
         final int screenCols = profile.numColumns;
@@ -292,21 +299,18 @@ public class LoaderResults {
     }
 
     private void bindWorkspaceItems(final ArrayList<ItemInfo> workspaceItems,
-            final ArrayList<LauncherAppWidgetInfo> appWidgets,
-            final Executor executor) {
+                                    final ArrayList<LauncherAppWidgetInfo> appWidgets,
+                                    final Executor executor) {
 
-        // Bind the workspace items
+        // Bind the workspace items 把item分为6个一组 剩下不够六个的为一组 去绑定
         int N = workspaceItems.size();
         for (int i = 0; i < N; i += ITEMS_CHUNK) {
             final int start = i;
-            final int chunkSize = (i+ITEMS_CHUNK <= N) ? ITEMS_CHUNK : (N-i);
-            final Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    Callbacks callbacks = mCallbacks.get();
-                    if (callbacks != null) {
-                        callbacks.bindItems(workspaceItems.subList(start, start+chunkSize), false);
-                    }
+            final int chunkSize = (i + ITEMS_CHUNK <= N) ? ITEMS_CHUNK : (N - i);
+            final Runnable r = () -> {
+                Callbacks callbacks = mCallbacks.get();
+                if (callbacks != null) {
+                    callbacks.bindItems(workspaceItems.subList(start, start + chunkSize), false);
                 }
             };
             executor.execute(r);
@@ -316,12 +320,10 @@ public class LoaderResults {
         N = appWidgets.size();
         for (int i = 0; i < N; i++) {
             final ItemInfo widget = appWidgets.get(i);
-            final Runnable r = new Runnable() {
-                public void run() {
-                    Callbacks callbacks = mCallbacks.get();
-                    if (callbacks != null) {
-                        callbacks.bindItems(Collections.singletonList(widget), false);
-                    }
+            final Runnable r = () -> {
+                Callbacks callbacks = mCallbacks.get();
+                if (callbacks != null) {
+                    callbacks.bindItems(Collections.singletonList(widget), false);
                 }
             };
             executor.execute(r);
@@ -347,8 +349,7 @@ public class LoaderResults {
 
     public void bindAllApps() {
         // shallow copy
-        @SuppressWarnings("unchecked")
-        final ArrayList<AppInfo> list = (ArrayList<AppInfo>) mBgAllAppsList.data.clone();
+        @SuppressWarnings("unchecked") final ArrayList<AppInfo> list = (ArrayList<AppInfo>) mBgAllAppsList.data.clone();
 
         Runnable r = new Runnable() {
             public void run() {

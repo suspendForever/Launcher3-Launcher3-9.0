@@ -61,6 +61,7 @@ public class InvariantDeviceProfile {
 
     /**
      * Number of icons per row and column in the workspace.
+     * 工作区中每行和每列的图标数。
      */
     public int numRows;
     public int numColumns;

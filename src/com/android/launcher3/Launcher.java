@@ -965,6 +965,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
     }
 
     /**
+     * //创建快捷方式，并为快捷方式设置click 事件
      * Creates a view representing a shortcut inflated from the specified resource.
      *
      * @param parent The group the shortcut belongs to.
@@ -1780,12 +1781,14 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
         // Floating panels (except the full widget sheet) are associated with individual icons. If
         // we are starting a fresh bind, close all such panels as all the icons are about
         // to go away.
+        //浮动面板（完整的小部件工作表除外）与单个图标相关联。如果我们要开始一个新的绑定，请关闭所有此类面板，因为所有图标都将消失。
         AbstractFloatingView.closeOpenViews(this, true,
                 AbstractFloatingView.TYPE_ALL & ~AbstractFloatingView.TYPE_REBIND_SAFE);
 
         setWorkspaceLoading(true);
 
         // Clear the workspace because it's going to be rebound
+        //清除工作区，因为它将反弹
         mWorkspace.clearDropTargets();
         mWorkspace.removeAllWorkspaceScreens();
         mAppWidgetHost.clearViews();
@@ -1854,12 +1857,16 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
 
     /**
      * Bind the items start-end from the list.
+     * 从头到尾绑定item
+     * 根据item信息创建加载view
+     * 并且添加到workspace
      *
      * Implementation of the method from LauncherModel.Callbacks.
      */
     @Override
     public void  bindItems(final List<ItemInfo> items, final boolean forceAnimateIcons) {
         // Get the list of added items and intersect them with the set of items here
+        //获取已添加项的列表，并将它们与此处的项集相交
         final AnimatorSet anim = LauncherAnimUtils.createAnimatorSet();
         final Collection<Animator> bounceAnims = new ArrayList<>();
         final boolean animateIcons = forceAnimateIcons && canRunNewAppsAnimation();
@@ -1870,6 +1877,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
             final ItemInfo item = items.get(i);
 
             // Short circuit if we are loading dock items for a configuration which has no dock
+            //如果我们为没有扩展坞的配置加载扩展坞项目，则短路
             if (item.container == LauncherSettings.Favorites.CONTAINER_HOTSEAT &&
                     mHotseat == null) {
                 continue;
@@ -1904,6 +1912,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
 
              /*
              * Remove colliding items.
+             * 删除现有的cellLayout中位置和当前准备绑定的item的位置有冲突的item
              */
             if (item.container == LauncherSettings.Favorites.CONTAINER_DESKTOP) {
                 CellLayout cl = mWorkspace.getScreenWithId(item.screenId);
@@ -1921,6 +1930,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
                     }
                 }
             }
+            //将item信息和创建的view添加到workspace
             workspace.addInScreenFromBind(view, item);
             if (animateIcons) {
                 // Animate all the applications up now

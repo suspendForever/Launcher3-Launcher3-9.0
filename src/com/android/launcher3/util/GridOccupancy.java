@@ -6,6 +6,7 @@ import com.android.launcher3.ItemInfo;
 
 /**
  * Utility object to manage the occupancy in a grid.
+ * 用于管理网格中占用的实用程序对象
  */
 public class GridOccupancy {
 
