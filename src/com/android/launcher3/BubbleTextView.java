@@ -197,6 +197,7 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver, 
 
     public void applyFromShortcutInfo(ShortcutInfo info, boolean promiseStateChanged) {
         applyIconAndLabel(info);
+        //TODO 这个地方塞如itemInfo
         setTag(info);
         if (promiseStateChanged || (info.hasPromiseIconUi())) {
             applyPromiseState(promiseStateChanged);

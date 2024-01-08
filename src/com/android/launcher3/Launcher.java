@@ -461,6 +461,8 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
         // This cast is safe as long as the id < 0x00FFFFFF
         // Since we jail all the dynamically generated views, there should be no clashes
         // with any other views.
+        //aapt 生成的 ID 具有高字节非零;钳到该范围以下。
+        // 只要 id < 0x00FFFFFF，此强制转换就是安全的 由于我们限制了所有动态生成的视图，因此不应与任何其他视图发生冲突
         return (int) info.id;
     }
 
@@ -1773,6 +1775,8 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
 
     /**
      * Refreshes the shortcuts shown on the workspace.
+     * 刷新工作区上显示的快捷方式。
+     * 删除所有workspace的screen 然后创建第一个新的screen
      *
      * Implementation of the method from LauncherModel.Callbacks.
      */
@@ -1799,6 +1803,10 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
         TraceHelper.endSection("startBinding");
     }
 
+    /**
+     * 绑定orderScrrenIds里的所有屏幕
+     * @param orderedScreenIds
+     */
     @Override
     public void bindScreens(ArrayList<Long> orderedScreenIds) {
         // Make sure the first screen is always at the start.

@@ -579,6 +579,7 @@ public class CellLayout extends ViewGroup {
         final LayoutParams lp = params;
 
         // Hotseat icons - remove text
+        //删除热区的文字
         if (child instanceof BubbleTextView) {
             BubbleTextView bubbleChild = (BubbleTextView) child;
             bubbleChild.setTextVisibility(mContainerType != HOTSEAT);
@@ -589,18 +590,24 @@ public class CellLayout extends ViewGroup {
 
         // Generate an id for each view, this assumes we have at most 256x256 cells
         // per workspace screen
+        //为每个视图生成一个 id，假设每个工作区屏幕最多有 256x256 个单元格
         if (lp.cellX >= 0 && lp.cellX <= mCountX - 1 && lp.cellY >= 0 && lp.cellY <= mCountY - 1) {
             // If the horizontal or vertical span is set to -1, it is taken to
             // mean that it spans the extent of the CellLayout
+            //如果水平或垂直跨度设置为 -1，则表示它跨越了 CellLayout 的范围
             if (lp.cellHSpan < 0) lp.cellHSpan = mCountX;
             if (lp.cellVSpan < 0) lp.cellVSpan = mCountY;
 
+            //TODO 给view设置id
             child.setId(childId);
             if (LOGD) {
                 Log.d(TAG, "Adding view to ShortcutsAndWidgetsContainer: " + child);
             }
+            //添加item到shortcutsAndWidgets
+
             mShortcutsAndWidgets.addView(child, index, lp);
 
+            //TODO 明天继续
             if (markCells) markCellsAsOccupiedForView(child);
 
             return true;

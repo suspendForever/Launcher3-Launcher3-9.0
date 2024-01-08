@@ -155,6 +155,7 @@ public class LoaderResults {
 
         Executor mainExecutor = mUiExecutor;
         // Load items on the current page.
+        //加载当前页面上的项目。
         bindWorkspaceItems(currentWorkspaceItems, currentAppWidgets, mainExecutor);
 
         // In case of validFirstPage, only bind the first screen, and defer binding the

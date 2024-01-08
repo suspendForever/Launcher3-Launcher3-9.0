@@ -913,6 +913,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             if (getScreenWithId(screenId) == null) {
                 Log.e(TAG, "Skipping child, screenId " + screenId + " not found");
                 // DEBUGGING - Print out the stack trace to see where we are adding from
+                //调试 - 打印出堆栈跟踪以查看我们从哪里添加
                 new Throwable().printStackTrace();
                 return;
             }
@@ -927,6 +928,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             layout = mLauncher.getHotseat().getLayout();
 
             // Hide folder title in the hotseat
+            //TODO 在热座中隐藏文件夹标题
             if (child instanceof FolderIcon) {
                 ((FolderIcon) child).setTextVisible(false);
             }
@@ -939,6 +941,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
 
         ViewGroup.LayoutParams genericLp = child.getLayoutParams();
+        //创建布局参数 主要为位置以及所占宽高赋值
         CellLayout.LayoutParams lp;
         if (genericLp == null || !(genericLp instanceof CellLayout.LayoutParams)) {
             lp = new CellLayout.LayoutParams(x, y, spanX, spanY);
@@ -955,18 +958,23 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
 
         // Get the canonical child id to uniquely represent this view in this screen
+        //获取规范子 ID 以在此屏幕中唯一表示此视图
         ItemInfo info = (ItemInfo) child.getTag();
         int childId = mLauncher.getViewIdForItem(info);
 
         boolean markCellsAsOccupied = !(child instanceof Folder);
+        //将item 添加到cell layout、
         if (!layout.addViewToCellLayout(child, -1, childId, lp, markCellsAsOccupied)) {
             // TODO: This branch occurs when the workspace is adding views
+            // 当工作区添加视图时，将发生此分支
             // outside of the defined grid
             // maybe we should be deleting these items from the LauncherModel?
+            //在定义的网格之外，也许我们应该从 LauncherModel 中删除这些项目?
             Log.e(TAG, "Failed to add to item at (" + lp.cellX + "," + lp.cellY + ") to CellLayout");
         }
 
         child.setHapticFeedbackEnabled(false);
+        //TODO 为item 设置长按事件
         child.setOnLongClickListener(ItemLongClickListener.INSTANCE_WORKSPACE);
         if (child instanceof DropTarget) {
             mDragController.addDropTarget((DropTarget) child);
