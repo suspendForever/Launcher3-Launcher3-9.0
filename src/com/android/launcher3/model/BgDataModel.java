@@ -107,6 +107,7 @@ public class BgDataModel {
     public final WidgetsModel widgetsModel = new WidgetsModel();
 
     /**
+     * 上次绑定模型时的Id
      * Id when the model was last bound
      */
     public int lastBindId = 0;

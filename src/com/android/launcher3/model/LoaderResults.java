@@ -102,6 +102,7 @@ public class LoaderResults {
             mBgDataModel.lastBindId++;
         }
 
+        //校正当前页
         final int currentScreen;
         {
             int currScreen = mPageToBindFirst != PagedView.INVALID_RESTORE_PAGE
@@ -271,6 +272,7 @@ public class LoaderResults {
             public int compare(ItemInfo lhs, ItemInfo rhs) {
                 if (lhs.container == rhs.container) {
                     // Within containers, order by their spatial position in that container
+                    //在容器中，按容器中的空间位置排序
                     switch ((int) lhs.container) {
                         case LauncherSettings.Favorites.CONTAINER_DESKTOP: {
                             long lr = (lhs.screenId * screenCellCount +
@@ -349,7 +351,8 @@ public class LoaderResults {
 
     public void bindAllApps() {
         // shallow copy
-        @SuppressWarnings("unchecked") final ArrayList<AppInfo> list = (ArrayList<AppInfo>) mBgAllAppsList.data.clone();
+        @SuppressWarnings("unchecked")
+        final ArrayList<AppInfo> list = (ArrayList<AppInfo>) mBgAllAppsList.data.clone();
 
         Runnable r = new Runnable() {
             public void run() {
