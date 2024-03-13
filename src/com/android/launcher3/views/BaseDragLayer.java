@@ -21,6 +21,7 @@ import static com.android.launcher3.Utilities.SINGLE_FRAME_MS;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.android.launcher3.BaseActivity;
 import com.android.launcher3.BaseDraggingActivity;
 import com.android.launcher3.InsettableFrameLayout;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.util.MultiValueAlpha;
 import com.android.launcher3.util.MultiValueAlpha.AlphaProperty;
 import com.android.launcher3.util.TouchController;
@@ -42,6 +44,8 @@ import java.util.ArrayList;
  * A viewgroup with utility methods for drag-n-drop and touch interception
  */
 public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends InsettableFrameLayout {
+
+    private static final String TAG = "BaseDragLayer";
 
     protected final int[] mTmpXY = new int[2];
     protected final Rect mHitRect = new Rect();
@@ -66,6 +70,8 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onInterceptTouchEvent: "+ev.getAction());
+        //DragLayer派发事件 包括拖拽view有关的一系列事件
         int action = ev.getAction();
 
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
@@ -76,10 +82,15 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
         } else if (action == MotionEvent.ACTION_DOWN) {
             mActivity.finishAutoCancelActionMode();
         }
-        return findActiveController(ev);
+        boolean hasFind = findActiveController(ev);
+        LogUtil.d(TAG, "onInterceptTouchEvent: findController "+hasFind);
+        //当触发了拖动后拦截此事件 自己处理
+        return hasFind;
     }
 
     protected boolean findActiveController(MotionEvent ev) {
+        LogUtil.d(TAG, "findActiveController: ");
+        //找Dragcontroller 去派发事件
         mActiveController = null;
 
         AbstractFloatingView topView = AbstractFloatingView.getTopOpenView(mActivity);
@@ -88,6 +99,8 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
             return true;
         }
 
+        //mControllers 包含了launcher创建的dragController
+        LogUtil.d(TAG, "findActiveController: 1111");
         for (TouchController controller : mControllers) {
             if (controller.onControllerInterceptTouchEvent(ev)) {
                 mActiveController = controller;
@@ -150,6 +163,7 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onTouchEvent: "+ev.getAction());
         int action = ev.getAction();
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
             if (mTouchCompleteListener != null) {
@@ -159,6 +173,7 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
         }
 
         if (mActiveController != null) {
+            //TODO 关键点 传递事件给controller
             return mActiveController.onControllerTouchEvent(ev);
         } else {
             // In case no child view handled the touch event, we may not get onIntercept anymore

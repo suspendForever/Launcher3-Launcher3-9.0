@@ -21,11 +21,13 @@ import static android.view.MotionEvent.ACTION_DOWN;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.launcher3.CellLayout.ContainerType;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.widget.LauncherAppWidgetHostView;
 
 /**
@@ -118,6 +120,7 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
         final DeviceProfile profile = mLauncher.getDeviceProfile();
 
         if (child instanceof LauncherAppWidgetHostView) {
+            LogUtil.d(TAG, "measureWidget scale"+ profile.appWidgetScale.x+"--"+profile.appWidgetScale.y);
             lp.setup(mCellWidth, mCellHeight, invertLayoutHorizontally(), mCountX,
                     profile.appWidgetScale.x, profile.appWidgetScale.y);
             // Widgets have their own padding

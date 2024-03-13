@@ -49,6 +49,7 @@ public abstract class DragDriver {
 
         switch (action) {
             case MotionEvent.ACTION_MOVE:
+                //将坐标传递给dragdriver
                 mEventListener.onDriverDragMove(ev.getX(), ev.getY());
                 break;
             case MotionEvent.ACTION_UP:

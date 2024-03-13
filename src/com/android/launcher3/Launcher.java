@@ -83,6 +83,7 @@ import com.android.launcher3.badge.BadgeInfo;
 import com.android.launcher3.compat.AppWidgetManagerCompat;
 import com.android.launcher3.compat.LauncherAppsCompatVO;
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.dragndrop.DragController;
 import com.android.launcher3.dragndrop.DragLayer;
 import com.android.launcher3.dragndrop.DragView;
@@ -395,8 +396,10 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
 
     private void initDeviceProfile(InvariantDeviceProfile idp) {
         // Load configuration-specific DeviceProfile
+        LogUtil.d(TAG, "initDeviceProfile: getDefault device profile");
         mDeviceProfile = idp.getDeviceProfile(this);
         if (isInMultiWindowModeCompat()) {
+            LogUtil.d(TAG, "initDeviceProfile: get MultiWindow device profile");
             Display display = getWindowManager().getDefaultDisplay();
             Point mwSize = new Point();
             display.getSize(mwSize);

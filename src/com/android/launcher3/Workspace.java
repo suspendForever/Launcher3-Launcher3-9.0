@@ -66,6 +66,7 @@ import com.android.launcher3.anim.Interpolators;
 import com.android.launcher3.badge.FolderBadgeInfo;
 import com.android.launcher3.compat.AppWidgetManagerCompat;
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.dragndrop.DragController;
 import com.android.launcher3.dragndrop.DragLayer;
 import com.android.launcher3.dragndrop.DragOptions;
@@ -1560,6 +1561,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         View child = cellInfo.cell;
 
         mDragInfo = cellInfo;
+        //将长按的view设为不可见
         child.setVisibility(INVISIBLE);
 
         if (options.isAccessibleDrag) {
@@ -1588,6 +1590,15 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
                 new DragPreviewProvider(child), options);
     }
 
+    /**
+     * 将itemInfo生成一个供拖拽的view
+     * @param child
+     * @param source
+     * @param dragObject
+     * @param previewProvider
+     * @param dragOptions
+     * @return
+     */
     public DragView beginDragShared(View child, DragSource source, ItemInfo dragObject,
                                     DragPreviewProvider previewProvider, DragOptions dragOptions) {
         float iconScale = 1f;
@@ -1603,6 +1614,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         mOutlineProvider = previewProvider;
 
         // The drag bitmap follows the touch point around on the screen
+        //拖动位图跟随屏幕上的触摸点
         final Bitmap b = previewProvider.createDragBitmap();
         int halfPadding = previewProvider.previewPadding / 2;
 
@@ -2294,6 +2306,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     public void onDragOver(DragObject d) {
+        LogUtil.d(TAG, "onDragOver: ");
         // Skip drag over events while we are dragging over side pages
         if (!transitionStateShouldAllowDrop()) return;
 
@@ -2562,6 +2575,10 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
     }
 
+    /**
+     * 我们希望工作区具有显示的整个区域（它将在现有的拖放逻辑中找到要拖放到的正确单元格布局
+     * @param outRect
+     */
     @Override
     public void getHitRectRelativeToDragLayer(Rect outRect) {
         // We want the workspace to have the whole area of the display (it will find the correct

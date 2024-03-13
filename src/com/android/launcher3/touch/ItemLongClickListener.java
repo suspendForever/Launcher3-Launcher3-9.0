@@ -22,6 +22,7 @@ import static com.android.launcher3.LauncherState.ALL_APPS;
 import static com.android.launcher3.LauncherState.NORMAL;
 import static com.android.launcher3.LauncherState.OVERVIEW;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 
@@ -31,6 +32,7 @@ import com.android.launcher3.DropTarget;
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherState;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.dragndrop.DragController;
 import com.android.launcher3.dragndrop.DragOptions;
 import com.android.launcher3.folder.Folder;
@@ -40,6 +42,8 @@ import com.android.launcher3.folder.Folder;
  */
 public class ItemLongClickListener {
 
+    private static final String TAG = "ItemLongClickListener";
+
     public static OnLongClickListener INSTANCE_WORKSPACE =
             ItemLongClickListener::onWorkspaceItemLongClick;
 
@@ -47,9 +51,16 @@ public class ItemLongClickListener {
             ItemLongClickListener::onAllAppsItemLongClick;
 
     private static boolean onWorkspaceItemLongClick(View v) {
+        LogUtil.d(TAG, "onWorkspaceItemLongClick: ");
         Launcher launcher = Launcher.getLauncher(v.getContext());
-        if (!canStartDrag(launcher)) return false;
-        if (!launcher.isInState(NORMAL) && !launcher.isInState(OVERVIEW)) return false;
+        if (!canStartDrag(launcher)) {
+            LogUtil.d(TAG, "onWorkspaceItemLongClick: can not StartDrag");
+            return false;
+        }
+        if (!launcher.isInState(NORMAL) && !launcher.isInState(OVERVIEW)) {
+            LogUtil.d(TAG, "onWorkspaceItemLongClick: isIn Normal or Overview");
+            return false;
+        }
         if (!(v.getTag() instanceof ItemInfo)) return false;
 
         launcher.setWaitingForResult(null);
@@ -58,7 +69,7 @@ public class ItemLongClickListener {
     }
 
     public static void beginDrag(View v, Launcher launcher, ItemInfo info,
-            DragOptions dragOptions) {
+                                 DragOptions dragOptions) {
         if (info.container >= 0) {
             Folder folder = Folder.getOpen(launcher);
             if (folder != null) {

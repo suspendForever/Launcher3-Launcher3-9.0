@@ -115,6 +115,8 @@ public class DragPreviewProvider {
     /**
      * Returns a new bitmap to show when the {@link #mView} is being dragged around.
      * Responsibility for the bitmap is transferred to the caller.
+     * 返回一个新的位图，以显示拖动时 mView 的位图。位图的责任将转移给调用方
+     * 创建一个bitmap 供拖拽的时候使用
      */
     public Bitmap createDragBitmap() {
         int width = mView.getWidth();
@@ -165,6 +167,7 @@ public class DragPreviewProvider {
         if (mView instanceof LauncherAppWidgetHostView) {
             // App widgets are technically scaled, but are drawn at their expected size -- so the
             // app widget scale should not affect the scale of the preview.
+            //应用小组件在技术上是缩放的，但按其预期大小绘制 - 因此应用小组件缩放不应影响预览的缩放。
             scale /= ((LauncherAppWidgetHostView) mView).getScaleToFit();
         }
 

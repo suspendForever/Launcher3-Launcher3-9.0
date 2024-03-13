@@ -168,6 +168,7 @@ public class DragController implements DragDriver.EventListener, TouchController
         final Resources res = mLauncher.getResources();
         final float scaleDps = mIsInPreDrag
                 ? res.getDimensionPixelSize(R.dimen.pre_drag_view_scale) : 0f;
+        //创建拖拽view
         final DragView dragView = mDragObject.dragView = new DragView(mLauncher, b, registrationX,
                 registrationY, initialDragViewScale, dragViewScaleOnDrop, scaleDps);
         dragView.setItemInfo(dragInfo);
@@ -182,6 +183,7 @@ public class DragController implements DragDriver.EventListener, TouchController
             mDragObject.yOffset = mMotionDownY - (dragLayerY + dragRegionTop);
             mDragObject.stateAnnouncer = DragViewStateAnnouncer.createFor(dragView);
 
+            //创建DragDriver
             mDragDriver = DragDriver.create(mLauncher, this, mDragObject, mOptions);
         }
 
@@ -198,6 +200,7 @@ public class DragController implements DragDriver.EventListener, TouchController
         }
 
         mLauncher.getDragLayer().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+        //将创建的dragview 添加到draglayer
         dragView.show(mMotionDownX, mMotionDownY);
         mDistanceSinceScroll = 0;
 
@@ -348,6 +351,7 @@ public class DragController implements DragDriver.EventListener, TouchController
 
     /**
      * Clamps the position to the drag layer bounds.
+     * 将位置夹紧到拖动图层边界。
      */
     private int[] getClampedDragLayerPos(float x, float y) {
         mLauncher.getDragLayer().getLocalVisibleRect(mDragLayerRect);
@@ -405,6 +409,7 @@ public class DragController implements DragDriver.EventListener, TouchController
 
     /**
      * Call this from a drag source view.
+     * 从拖动源视图调用它
      */
     public boolean onControllerInterceptTouchEvent(MotionEvent ev) {
         if (mOptions != null && mOptions.isAccessibleDrag) {
@@ -430,6 +435,7 @@ public class DragController implements DragDriver.EventListener, TouchController
                 break;
         }
 
+        //只有dragdriver 不为空时 且 dragdriver要拦截此事件时 返回true
         return mDragDriver != null && mDragDriver.onInterceptTouchEvent(ev);
     }
 
@@ -462,6 +468,7 @@ public class DragController implements DragDriver.EventListener, TouchController
     }
 
     private void handleMoveEvent(int x, int y) {
+        //移动dragview
         mDragObject.dragView.move(x, y);
 
         // Drop on someone?
@@ -472,6 +479,7 @@ public class DragController implements DragDriver.EventListener, TouchController
         checkTouchMove(dropTarget);
 
         // Check if we are hovering over the scroll areas
+        //检查我们是否将鼠标悬停在滚动区域上
         mDistanceSinceScroll += Math.hypot(mLastTouch[0] - x, mLastTouch[1] - y);
         mLastTouch[0] = x;
         mLastTouch[1] = y;
