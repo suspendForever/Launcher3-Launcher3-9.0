@@ -2,8 +2,6 @@ package com.android.launcher3.developerspace;
 
 import android.graphics.Rect;
 
-import com.android.launcher3.DropTarget;
-import com.android.launcher3.dragndrop.DragOptions;
 
 public interface LhmDropTarget {
 
@@ -19,20 +17,20 @@ public interface LhmDropTarget {
      * If the drop was cancelled for some reason, onDrop will never get called, the UI will
      * automatically exit out of this mode.
      */
-    void onDrop(DropTarget.DragObject dragObject, DragOptions options);
+    void onDrop(LhmDragObject dragObject);
 
-    void onDragEnter(DropTarget.DragObject dragObject);
+    void onDragEnter(LhmDragObject dragObject);
 
-    void onDragOver(DropTarget.DragObject dragObject);
+    void onDragOver(LhmDragObject dragObject);
 
-    void onDragExit(DropTarget.DragObject dragObject);
+    void onDragExit(LhmDragObject dragObject);
 
     /**
      * Check if a drop action can occur at, or near, the requested location.
      * This will be called just before onDrop.
      * @return True if the drop will be accepted, false otherwise.
      */
-    boolean acceptDrop(DropTarget.DragObject dragObject);
+    boolean acceptDrop(LhmDragObject dragObject);
 
     void prepareAccessibilityDrop();
 

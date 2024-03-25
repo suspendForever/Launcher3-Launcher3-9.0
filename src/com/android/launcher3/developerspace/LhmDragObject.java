@@ -3,6 +3,10 @@ package com.android.launcher3.developerspace;
 
 class LhmDragObject {
 
+    public int x=-1;
+
+    public int y=-1;
+
     public LhmDragView dragView = null;
 
     public boolean dragComplete = false;
@@ -19,6 +23,6 @@ class LhmDragObject {
 
     public LhmDragSource dragSource = null;
 
-    public LhmItemInfo dragInfo=null;
+    public LhmItemInfo dragInfo = null;
     public LhmItemInfo originalDragInfo;
 }

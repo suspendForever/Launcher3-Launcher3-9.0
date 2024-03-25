@@ -2,6 +2,7 @@ package com.android.launcher3.developerspace;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 
 public class MainLauncher extends Activity implements ILauncher {
 
@@ -19,4 +20,21 @@ public class MainLauncher extends Activity implements ILauncher {
     public LhmDragLayer getDragLayer() {
         return null;
     }
+
+    @Override
+    public LhmDragController getDragController() {
+        return null;
+    }
+
+    @Override
+    public View getRootView() {
+        return null;
+    }
+
+    @Override
+    public LhmDropTarget getDropTarget() {
+        return null;
+    }
+
+
 }

@@ -86,7 +86,18 @@ class SystemDragDriver extends LhmDragDriver {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return false;
+        final int action = ev.getAction();
+
+        switch (action) {
+            case MotionEvent.ACTION_UP:
+                mEventListener.onDriverDragEnd(ev.getX(), ev.getY());
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                mEventListener.onDriverDragCancel();
+                break;
+        }
+
+        return true;
     }
 
     @Override
