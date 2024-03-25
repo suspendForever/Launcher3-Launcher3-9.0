@@ -40,7 +40,9 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
 
     private final int[] mCoordinatesTemp = new int[2];
 
-    /** Who can receive drop events */
+    /**
+     * Who can receive drop events
+     */
     private ArrayList<LhmDropTarget> mDropTargets = new ArrayList<>();
 
 
@@ -71,7 +73,21 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
 
     @Override
     public boolean onControllerTouchEvent(MotionEvent ev) {
-        return false;
+        if (mDragDriver == null) return false;
+
+        int action = ev.getAction();
+        int[] dragLayerPos = getClampedDragLayerPos(ev.getX(), ev.getY());
+        int dragLayerX = dragLayerPos[0];
+        int dragLayerY = dragLayerPos[1];
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN: {
+                mMotionDownX = dragLayerX;
+                mMotionDownY = dragLayerY;
+                break;
+            }
+        }
+        return mDragDriver.onTouchEvent(ev);
     }
 
     @Override
@@ -95,7 +111,8 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
         }
 
         //只有dragdriver 不为空时 且 dragdriver要拦截此事件时 返回true
-        return mDragDriver != null && mDragDriver.onInterceptTouchEvent(ev);    }
+        return mDragDriver != null && mDragDriver.onInterceptTouchEvent(ev);
+    }
 
     public LhmDragController(ILauncher launcher) {
         this.mLauncher = launcher;
@@ -191,7 +208,7 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
         dropCoordinates[1] = y;
         mLauncher.getDragLayer().mapCoordInSelfToDescendant(mLauncher.getRootView(),
                 dropCoordinates);
-        return mLauncher.getDropTarget() ;
+        return mLauncher.getDropTarget();
     }
 
     private void checkTouchMove(LhmDropTarget dropTarget) {
@@ -221,7 +238,9 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
 
     @Override
     public void onDriverDragMove(float x, float y) {
+        final int[] dragLayerPos = getClampedDragLayerPos(x, y);
 
+        handleMoveEvent(dragLayerPos[0], dragLayerPos[1]);
     }
 
     @Override
@@ -231,7 +250,7 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
 
     @Override
     public void onDriverDragEnd(float x, float y) {
-        LhmDropTarget dropTarget=findDropTarget((int) x, (int) y, mCoordinatesTemp)
+        LhmDropTarget dropTarget = findDropTarget((int) x, (int) y, mCoordinatesTemp)
 
 //        drop(dropTarget, flingAnimation);
 
