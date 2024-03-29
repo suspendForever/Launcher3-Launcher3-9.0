@@ -29,7 +29,11 @@ public class LhmLauncherAppWidgetHostView extends AppWidgetHostView {
         setTranslationY(y);
     }
 
-    public PointF getTranslationForCentering() {
+    public PointF getTranslationForCentering()
+
+
+
+    {
         return mTranslationForCentering;
     }
 
