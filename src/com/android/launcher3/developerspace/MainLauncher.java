@@ -5,7 +5,12 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 
+import com.android.launcher3.CellLayout;
+
 public class MainLauncher extends Activity implements ILauncher,LhmDropTarget {
+
+    private CellLayout mDropToLayout = null;
+
 
     @Override
     public Boolean finishAutoCancelActionMode() {
@@ -50,12 +55,7 @@ public class MainLauncher extends Activity implements ILauncher,LhmDropTarget {
 
     @Override
     public void onDragEnter(LhmDragObject dragObject) {
-        if (ENFORCE_DRAG_EVENT_ORDER) {
-            enforceDragParity("onDragEnter", 1, 1);
-        }
 
-        mCreateUserFolderOnDrop = false;
-        mAddToExistingFolderOnDrop = false;
 
         mDropToLayout = null;
         mDragViewVisualCenter = d.getVisualCenter(mDragViewVisualCenter);
