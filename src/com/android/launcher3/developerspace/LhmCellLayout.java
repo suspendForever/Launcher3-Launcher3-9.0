@@ -27,6 +27,7 @@ public class LhmCellLayout extends ViewGroup {
     private WidgetContainer mWidgetContainer;
 
     private LhmGridOccupancy mOccupied = new LhmGridOccupancy(mCountX, mCountY);
+    private boolean mDragging;
 
 
     public LhmCellLayout(Context context) {
@@ -48,7 +49,7 @@ public class LhmCellLayout extends ViewGroup {
         mCountY = CELL_COUNT_Y;
 
         mWidgetContainer = new WidgetContainer(context);
-        mWidgetContainer.setCellDimensions(mCellWidth, mCellHeight, mCountX, mCountY)
+        mWidgetContainer.setCellDimensions(mCellWidth, mCellHeight, mCountX, mCountY);
         addView(mWidgetContainer);
     }
 
@@ -133,6 +134,10 @@ public class LhmCellLayout extends ViewGroup {
         if (view == null || view.getParent() != mWidgetContainer) return;
         LayoutParams lp = (LayoutParams) view.getLayoutParams();
         mOccupied.markCells(lp.cellX, lp.cellY, lp.cellHSpan, lp.cellVSpan, true);
+    }
+
+    void onDragEnter() {
+        mDragging = true;
     }
 
     class LayoutParams extends ViewGroup.MarginLayoutParams {

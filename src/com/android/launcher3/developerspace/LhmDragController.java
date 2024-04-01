@@ -42,6 +42,8 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
 
     /**
      * Who can receive drop events
+     * 在每个item(实现了Droptarget接口)被添加到celllayout后都会添加到这个mDropTarget中
+     * 貌似是给文件夹用的
      */
     private ArrayList<LhmDropTarget> mDropTargets = new ArrayList<>();
 
@@ -55,6 +57,10 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
     long mLastTouchUpTime = -1;
 
     private Rect mDragLayerRect = new Rect();
+
+    public void addDropTarget(LhmDropTarget child) {
+        mDropTargets.add(child);
+    }
 
 
     public interface DragListener {
@@ -170,6 +176,7 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
         // Drop on someone?
         final int[] coordinates = mCoordinatesTemp;
         LhmDropTarget dropTarget = findDropTarget(x, y, coordinates);
+        //droptarget中的坐标
         mDragObject.x = coordinates[0];
         mDragObject.y = coordinates[1];
         checkTouchMove(dropTarget);
@@ -204,10 +211,12 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
         }
         // Pass all unhandled drag to workspace. Workspace finds the correct
         // cell layout to drop to in the existing drag/drop logic.
+        //将所有未处理的拖动传递到WrokSpace。工作区会在现有拖放逻辑中找到要拖放到的正确单元格布局
         dropCoordinates[0] = x;
         dropCoordinates[1] = y;
         mLauncher.getDragLayer().mapCoordInSelfToDescendant(mLauncher.getRootView(),
                 dropCoordinates);
+        //workspace 就是一个droptarget
         return mLauncher.getDropTarget();
     }
 

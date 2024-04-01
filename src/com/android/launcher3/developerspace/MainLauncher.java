@@ -4,12 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.launcher3.CellLayout;
 
 public class MainLauncher extends Activity implements ILauncher,LhmDropTarget {
 
     private CellLayout mDropToLayout = null;
+
+    float[] mDragViewVisualCenter = new float[2];
+
+    private LhmDragController mDragController;
+
+    LhmCellLayout mDragTargetLayout = null;
+    private LhmCellLayout mDragOverlappingLayout;
+
+
+    public void addItemInCell(View child){
+        mDragController.addDropTarget((LhmDropTarget) child);
+    }
 
 
     @Override
@@ -58,12 +71,49 @@ public class MainLauncher extends Activity implements ILauncher,LhmDropTarget {
 
 
         mDropToLayout = null;
-        mDragViewVisualCenter = d.getVisualCenter(mDragViewVisualCenter);
-        setDropLayoutForDragObject(d, mDragViewVisualCenter[0], mDragViewVisualCenter[1]);
+        mDragViewVisualCenter = dragObject.getVisualCenter(mDragViewVisualCenter);
+        setDropLayoutForDragObject(dragObject, mDragViewVisualCenter[0]);
+    }
+
+    private boolean setDropLayoutForDragObject(LhmDragObject d, float centerX){
+        ViewGroup rootView = (ViewGroup) getRootView();
+        LhmCellLayout layout = (LhmCellLayout)rootView.getChildAt(0);
+        if (layout != mDragTargetLayout) {
+            setCurrentDropLayout(layout);
+            setCurrentDragOverlappingLayout(layout);
+            return true;
+        }
+        return false;
+    }
+
+    void  setCurrentDropLayout(LhmCellLayout layout){
+        if (mDragTargetLayout != null) {
+//            mDragTargetLayout.revertTempState();
+//            mDragTargetLayout.onDragExit();
+        }
+        mDragTargetLayout = layout;
+        if (mDragTargetLayout != null) {
+            mDragTargetLayout.onDragEnter();
+        }
+
+    }
+
+    void setCurrentDragOverlappingLayout(LhmCellLayout layout) {
+//        if (mDragOverlappingLayout != null) {
+//            mDragOverlappingLayout.setIsDragOverlapping(false);
+//        }
+//        mDragOverlappingLayout = layout;
+//        if (mDragOverlappingLayout != null) {
+//            mDragOverlappingLayout.setIsDragOverlapping(true);
+//        }
+//        // Invalidating the scrim will also force this CellLayout
+//        // to be invalidated so that it is highlighted if necessary.
+//        mLauncher.getDragLayer().getScrim().invalidate();
     }
 
     @Override
     public void onDragOver(LhmDragObject dragObject) {
+
 
     }
 

@@ -95,6 +95,10 @@ public class LhmDragView extends View {
         mDragRegion = r;
     }
 
+    public Rect getDragRegion() {
+        return mDragRegion;
+    }
+
     public void show(int touchX, int touchY) {
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(0, 0);
         lp.width=mBitmap.getWidth();

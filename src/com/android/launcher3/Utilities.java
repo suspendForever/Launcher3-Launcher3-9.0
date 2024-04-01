@@ -135,6 +135,7 @@ public final class Utilities {
     }
 
     /**
+     * 给定相对于后代的坐标，在父视图的坐标中查找该坐标
      * Given a coordinate relative to the descendant, find the coordinate in a parent view's
      * coordinates.
      *
