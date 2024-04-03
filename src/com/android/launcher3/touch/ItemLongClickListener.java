@@ -70,7 +70,9 @@ public class ItemLongClickListener {
 
     public static void beginDrag(View v, Launcher launcher, ItemInfo info,
                                  DragOptions dragOptions) {
+        LogUtil.d(TAG, "beginDrag: ");
         if (info.container >= 0) {
+            LogUtil.d(TAG, "beginDrag: item has container");
             Folder folder = Folder.getOpen(launcher);
             if (folder != null) {
                 if (!folder.getItemsInReadingOrder().contains(v)) {

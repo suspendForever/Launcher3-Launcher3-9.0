@@ -17,15 +17,18 @@
 package com.android.launcher3.dragndrop;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import com.android.launcher3.DropTarget.DragObject;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.developerspace.LogUtil;
 
 /**
  * Base class for driving a drag/drop operation.
  */
 public abstract class DragDriver {
+    private static final String TAG = "DragDriver";
     protected final EventListener mEventListener;
 
     public interface EventListener {
@@ -45,6 +48,7 @@ public abstract class DragDriver {
     public void onDragViewAnimationEnd() { }
 
     public boolean onTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onTouchEvent: ");
         final int action = ev.getAction();
 
         switch (action) {
@@ -68,6 +72,7 @@ public abstract class DragDriver {
 
 
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onInterceptTouchEvent: action:"+ev.getAction());
         final int action = ev.getAction();
 
         switch (action) {
@@ -96,6 +101,7 @@ public abstract class DragDriver {
  * Class for driving a system (i.e. framework) drag/drop operation.
  */
 class SystemDragDriver extends DragDriver {
+    private static final String TAG = "SystemDragDriver";
 
     float mLastX = 0;
     float mLastY = 0;
@@ -106,11 +112,13 @@ class SystemDragDriver extends DragDriver {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onTouchEvent: action:"+ev.getAction());
         return false;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onInterceptTouchEvent:action:"+ev.getAction());
         return false;
     }
 

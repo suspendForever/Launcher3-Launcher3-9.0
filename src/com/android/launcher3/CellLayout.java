@@ -938,6 +938,7 @@ public class CellLayout extends ViewGroup {
         return false;
     }
 
+    //显示targetcell的边界线
     void visualizeDropLocation(View v, DragPreviewProvider outlineProvider, int cellX, int cellY,
             int spanX, int spanY, boolean resize, DropTarget.DragObject dragObject) {
         final int oldDragCellX = mDragCell[0];
@@ -1068,6 +1069,8 @@ public class CellLayout extends ViewGroup {
     }
 
     /**
+     * 找到接近请求位置的单元格的坐标位置
+     * 找到一个适合给定边界的空旷区域，该区域最接近请求的单元格位置。使用欧几里得距离对多个空区进行评分
      * Find a vacant area that will fit the given bounds nearest the requested
      * cell location. Uses Euclidean distance to score multiple vacant areas.
      *

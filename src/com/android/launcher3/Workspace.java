@@ -1558,6 +1558,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     public void startDrag(CellLayout.CellInfo cellInfo, DragOptions options) {
+        LogUtil.d(TAG, "startDrag: ");
         View child = cellInfo.cell;
 
         mDragInfo = cellInfo;
@@ -1579,6 +1580,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     public void beginDragShared(View child, DragSource source, DragOptions options) {
+        LogUtil.d(TAG, "beginDragShared: ");
         Object dragObject = child.getTag();
         if (!(dragObject instanceof ItemInfo)) {
             String msg = "Drag started with a view that has no tag set. This "
@@ -2132,6 +2134,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
     @Override
     public void onDragEnter(DragObject d) {
+        LogUtil.d(TAG, "onDragEnter: ");
         if (ENFORCE_DRAG_EVENT_ORDER) {
             enforceDragParity("onDragEnter", 1, 1);
         }
@@ -2146,6 +2149,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
     @Override
     public void onDragExit(DragObject d) {
+        LogUtil.d(TAG, "onDragExit: ");
         if (ENFORCE_DRAG_EVENT_ORDER) {
             enforceDragParity("onDragExit", -1, 0);
         }
@@ -2185,12 +2189,15 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     void setCurrentDropLayout(CellLayout layout) {
+        Log.d(TAG, "setCurrentDropLayout: ");
         if (mDragTargetLayout != null) {
+            Log.d(TAG, "setCurrentDropLayout: mDragTargetLayout!=null onDragExit");
             mDragTargetLayout.revertTempState();
             mDragTargetLayout.onDragExit();
         }
         mDragTargetLayout = layout;
         if (mDragTargetLayout != null) {
+            Log.d(TAG, "setCurrentDropLayout: mDragTargetLayout!=null  onDragEnter");
             mDragTargetLayout.onDragEnter();
         }
         cleanupReorder(true);
@@ -2216,7 +2223,9 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     void setCurrentDropOverCell(int x, int y) {
+        LogUtil.d(TAG, "setCurrentDropOverCell: ");
         if (x != mDragOverX || y != mDragOverY) {
+            LogUtil.d(TAG, "setCurrentDropOverCell:  setDragMode(DRAG_MODE_NONE);");
             mDragOverX = x;
             mDragOverY = y;
             setDragMode(DRAG_MODE_NONE);
@@ -2324,15 +2333,18 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
         final View child = (mDragInfo == null) ? null : mDragInfo.cell;
         if (setDropLayoutForDragObject(d, mDragViewVisualCenter[0], mDragViewVisualCenter[1])) {
+            LogUtil.d(TAG, "onDragOver: 当前页 与 mDragTargetLayout 不同");
             if (mLauncher.isHotseatLayout(mDragTargetLayout)) {
                 mSpringLoadedDragController.cancel();
             } else {
+                LogUtil.d(TAG, "onDragOver: setAlarm :"+mDragTargetLayout);
                 mSpringLoadedDragController.setAlarm(mDragTargetLayout);
             }
         }
 
         // Handle the drag over
         if (mDragTargetLayout != null) {
+            LogUtil.d(TAG, "onDragOver: mDragTargetLayout != null");
             // We want the point to be mapped to the dragTarget.
             if (mLauncher.isHotseatLayout(mDragTargetLayout)) {
                 mapPointFromSelfToHotseatLayout(mLauncher.getHotseat(), mDragViewVisualCenter);
@@ -2355,16 +2367,19 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
             setCurrentDropOverCell(mTargetCell[0], mTargetCell[1]);
 
+            //算出当前的drag item 离最近的targetcell的距离
             float targetCellDistance = mDragTargetLayout.getDistanceFromCell(
                     mDragViewVisualCenter[0], mDragViewVisualCenter[1], mTargetCell);
 
             manageFolderFeedback(mDragTargetLayout, mTargetCell, targetCellDistance, d);
 
+            //targetcell是否被占领
             boolean nearestDropOccupied = mDragTargetLayout.isNearestDropLocationOccupied((int)
                             mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1], item.spanX,
                     item.spanY, child, mTargetCell);
 
             if (!nearestDropOccupied) {
+                Log.d(TAG, "onDragOver: is not nearestDropOccupied");
                 mDragTargetLayout.visualizeDropLocation(child, mOutlineProvider,
                         mTargetCell[0], mTargetCell[1], item.spanX, item.spanY, false, d);
             } else if ((mDragMode == DRAG_MODE_NONE || mDragMode == DRAG_MODE_REORDER)
@@ -2394,6 +2409,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     /**
+     * 更新 mDragTargetLayout 并 mDragOverlappingLayout 基于 DragObject 的位置。
      * Updates {@link #mDragTargetLayout} and {@link #mDragOverlappingLayout}
      * based on the DragObject's position.
      * <p>
@@ -2409,6 +2425,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         // Test to see if we are over the hotseat first
         if (mLauncher.getHotseat() != null && !isDragWidget(d)) {
             if (isPointInSelfOverHotseat(d.x, d.y)) {
+                Log.d(TAG, "setDropLayoutForDragObject: layout is hotseat");
                 layout = mLauncher.getHotseat().getLayout();
             }
         }
@@ -2418,6 +2435,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             // Check if the item is dragged over left page
             mTempTouchCoordinates[0] = Math.min(centerX, d.x);
             mTempTouchCoordinates[1] = d.y;
+            Log.d(TAG, "setDropLayoutForDragObject: layout is over left page");
             layout = verifyInsidePage(nextPage + (mIsRtl ? 1 : -1), mTempTouchCoordinates);
         }
 
@@ -2425,14 +2443,17 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             // Check if the item is dragged over right page
             mTempTouchCoordinates[0] = Math.max(centerX, d.x);
             mTempTouchCoordinates[1] = d.y;
+            Log.d(TAG, "setDropLayoutForDragObject: layout is over right page");
             layout = verifyInsidePage(nextPage + (mIsRtl ? -1 : 1), mTempTouchCoordinates);
         }
 
         // Always pick the current page.
         if (layout == null && nextPage >= 0 && nextPage < getPageCount()) {
+            Log.d(TAG, "setDropLayoutForDragObject: layout is page "+nextPage);
             layout = (CellLayout) getChildAt(nextPage);
         }
         if (layout != mDragTargetLayout) {
+            Log.d(TAG, "setDropLayoutForDragObject: layout != mDragTargetLayout ");
             setCurrentDropLayout(layout);
             setCurrentDragOverlappingLayout(layout);
             return true;

@@ -120,7 +120,7 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
         final DeviceProfile profile = mLauncher.getDeviceProfile();
 
         if (child instanceof LauncherAppWidgetHostView) {
-            LogUtil.d(TAG, "measureWidget scale"+ profile.appWidgetScale.x+"--"+profile.appWidgetScale.y);
+//            LogUtil.d(TAG, "measureWidget scale"+ profile.appWidgetScale.x+"--"+profile.appWidgetScale.y);
             lp.setup(mCellWidth, mCellHeight, invertLayoutHorizontally(), mCountX,
                     profile.appWidgetScale.x, profile.appWidgetScale.y);
             // Widgets have their own padding

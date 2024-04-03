@@ -167,6 +167,7 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
         int action = ev.getAction();
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
             if (mTouchCompleteListener != null) {
+                LogUtil.d(TAG, "onTouchEvent: mTouchCompleteListener.onTouchComplete();");
                 mTouchCompleteListener.onTouchComplete();
             }
             mTouchCompleteListener = null;
@@ -174,6 +175,7 @@ public abstract class BaseDragLayer<T extends BaseDraggingActivity> extends Inse
 
         if (mActiveController != null) {
             //TODO 关键点 传递事件给controller
+            LogUtil.d(TAG, "onTouchEvent: mActiveController.onControllerTouchEvent(ev);");
             return mActiveController.onControllerTouchEvent(ev);
         } else {
             // In case no child view handled the touch event, we may not get onIntercept anymore

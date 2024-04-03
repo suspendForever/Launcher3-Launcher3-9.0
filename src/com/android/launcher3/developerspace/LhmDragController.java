@@ -259,7 +259,7 @@ public class LhmDragController implements LhmTouchController, LhmDragDriver.Even
 
     @Override
     public void onDriverDragEnd(float x, float y) {
-        LhmDropTarget dropTarget = findDropTarget((int) x, (int) y, mCoordinatesTemp)
+//        LhmDropTarget dropTarget = findDropTarget((int) x, (int) y, mCoordinatesTemp)
 
 //        drop(dropTarget, flingAnimation);
 

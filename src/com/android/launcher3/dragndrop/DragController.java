@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
@@ -38,6 +39,7 @@ import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
 import com.android.launcher3.ShortcutInfo;
 import com.android.launcher3.accessibility.DragViewStateAnnouncer;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.util.ItemInfoMatcher;
 import com.android.launcher3.util.Thunk;
 import com.android.launcher3.util.TouchController;
@@ -49,6 +51,8 @@ import java.util.ArrayList;
  * Class for initiating a drag within a view or across multiple views.
  */
 public class DragController implements DragDriver.EventListener, TouchController {
+
+    private static final String TAG = "DragController";
     private static final boolean PROFILE_DRAWING_DURING_DRAG = false;
 
     @Thunk Launcher mLauncher;
@@ -139,6 +143,7 @@ public class DragController implements DragDriver.EventListener, TouchController
     public DragView startDrag(Bitmap b, int dragLayerX, int dragLayerY,
             DragSource source, ItemInfo dragInfo, Point dragOffset, Rect dragRegion,
             float initialDragViewScale, float dragViewScaleOnDrop, DragOptions options) {
+        LogUtil.d(TAG, "startDrag: ");
         if (PROFILE_DRAWING_DURING_DRAG) {
             android.os.Debug.startMethodTracing("Launcher");
         }
@@ -374,6 +379,7 @@ public class DragController implements DragDriver.EventListener, TouchController
 
     @Override
     public void onDriverDragMove(float x, float y) {
+        LogUtil.d(TAG, "onDriverDragMove: ");
         final int[] dragLayerPos = getClampedDragLayerPos(x, y);
 
         handleMoveEvent(dragLayerPos[0], dragLayerPos[1]);
@@ -389,6 +395,7 @@ public class DragController implements DragDriver.EventListener, TouchController
 
     @Override
     public void onDriverDragEnd(float x, float y) {
+        LogUtil.d(TAG, "onDriverDragEnd: ");
         DropTarget dropTarget;
         Runnable flingAnimation = mFlingToDeleteHelper.getFlingAnimation(mDragObject);
         if (flingAnimation != null) {
@@ -404,6 +411,7 @@ public class DragController implements DragDriver.EventListener, TouchController
 
     @Override
     public void onDriverDragCancel() {
+        LogUtil.d(TAG, "onDriverDragCancel: ");
         cancelDrag();
     }
 
@@ -412,6 +420,7 @@ public class DragController implements DragDriver.EventListener, TouchController
      * 从拖动源视图调用它
      */
     public boolean onControllerInterceptTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onControllerInterceptTouchEvent: action: "+ev.getAction());
         if (mOptions != null && mOptions.isAccessibleDrag) {
             return false;
         }
@@ -468,6 +477,7 @@ public class DragController implements DragDriver.EventListener, TouchController
     }
 
     private void handleMoveEvent(int x, int y) {
+        LogUtil.d(TAG, "handleMoveEvent: ");
         //移动dragview
         mDragObject.dragView.move(x, y);
 
@@ -503,9 +513,13 @@ public class DragController implements DragDriver.EventListener, TouchController
     }
 
     private void checkTouchMove(DropTarget dropTarget) {
+        LogUtil.d(TAG, "checkTouchMove: ");
         if (dropTarget != null) {
+            LogUtil.d(TAG, "checkTouchMove: dropTarget != null");
             if (mLastDropTarget != dropTarget) {
+                LogUtil.d(TAG, "checkTouchMove: mLastDropTarget != dropTarget");
                 if (mLastDropTarget != null) {
+                    Log.d(TAG, "checkTouchMove: mLastDropTarget != null");
                     mLastDropTarget.onDragExit(mDragObject);
                 }
                 dropTarget.onDragEnter(mDragObject);
@@ -513,6 +527,7 @@ public class DragController implements DragDriver.EventListener, TouchController
             dropTarget.onDragOver(mDragObject);
         } else {
             if (mLastDropTarget != null) {
+                LogUtil.d(TAG, "checkTouchMove: mLastDropTarget != null");
                 mLastDropTarget.onDragExit(mDragObject);
             }
         }
@@ -523,6 +538,7 @@ public class DragController implements DragDriver.EventListener, TouchController
      * Call this from a drag source view.
      */
     public boolean onControllerTouchEvent(MotionEvent ev) {
+        LogUtil.d(TAG, "onControllerTouchEvent: action: "+ev.getAction());
         if (mDragDriver == null || mOptions == null || mOptions.isAccessibleDrag) {
             return false;
         }
@@ -616,13 +632,22 @@ public class DragController implements DragDriver.EventListener, TouchController
         dispatchDropComplete(dropTargetAsView, accepted);
     }
 
+    /**
+     * 如果桌面不包含 文件夹之类的东西,会返回workspace 本身
+     * @param x
+     * @param y
+     * @param dropCoordinates
+     * @return
+     */
     private DropTarget findDropTarget(int x, int y, int[] dropCoordinates) {
+        LogUtil.d(TAG, "findDropTarget: ");
         mDragObject.x = x;
         mDragObject.y = y;
 
         final Rect r = mRectTemp;
         final ArrayList<DropTarget> dropTargets = mDropTargets;
         final int count = dropTargets.size();
+        LogUtil.d(TAG, "findDropTarget: dropTargets size:"+dropTargets.size());
         for (int i = count - 1; i >= 0; i--) {
             DropTarget target = dropTargets.get(i);
             if (!target.isDropEnabled())
@@ -633,15 +658,18 @@ public class DragController implements DragDriver.EventListener, TouchController
                 dropCoordinates[0] = x;
                 dropCoordinates[1] = y;
                 mLauncher.getDragLayer().mapCoordInSelfToDescendant((View) target, dropCoordinates);
+                LogUtil.d(TAG, "findDropTarget in dropTargets:"+target);
                 return target;
             }
         }
         // Pass all unhandled drag to workspace. Workspace finds the correct
         // cell layout to drop to in the existing drag/drop logic.
+        //将所有未处理的拖动传递到WrokSpace。工作区会在现有拖放逻辑中找到要拖放到的正确单元格布局
         dropCoordinates[0] = x;
         dropCoordinates[1] = y;
         mLauncher.getDragLayer().mapCoordInSelfToDescendant(mLauncher.getWorkspace(),
                 dropCoordinates);
+        LogUtil.d(TAG, "findDropTarget: return workspace");
         return mLauncher.getWorkspace();
     }
 
