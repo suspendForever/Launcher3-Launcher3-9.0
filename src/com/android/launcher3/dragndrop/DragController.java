@@ -519,7 +519,7 @@ public class DragController implements DragDriver.EventListener, TouchController
             if (mLastDropTarget != dropTarget) {
                 LogUtil.d(TAG, "checkTouchMove: mLastDropTarget != dropTarget");
                 if (mLastDropTarget != null) {
-                    Log.d(TAG, "checkTouchMove: mLastDropTarget != null");
+                    LogUtil.d(TAG, "checkTouchMove: mLastDropTarget != null");
                     mLastDropTarget.onDragExit(mDragObject);
                 }
                 dropTarget.onDragEnter(mDragObject);

@@ -2189,15 +2189,15 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     void setCurrentDropLayout(CellLayout layout) {
-        Log.d(TAG, "setCurrentDropLayout: ");
+        LogUtil.d(TAG, "setCurrentDropLayout: ");
         if (mDragTargetLayout != null) {
-            Log.d(TAG, "setCurrentDropLayout: mDragTargetLayout!=null onDragExit");
+            LogUtil.d(TAG, "setCurrentDropLayout: mDragTargetLayout!=null onDragExit");
             mDragTargetLayout.revertTempState();
             mDragTargetLayout.onDragExit();
         }
         mDragTargetLayout = layout;
         if (mDragTargetLayout != null) {
-            Log.d(TAG, "setCurrentDropLayout: mDragTargetLayout!=null  onDragEnter");
+            LogUtil.d(TAG, "setCurrentDropLayout: mDragTargetLayout!=null  onDragEnter");
             mDragTargetLayout.onDragEnter();
         }
         cleanupReorder(true);
@@ -2425,7 +2425,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         // Test to see if we are over the hotseat first
         if (mLauncher.getHotseat() != null && !isDragWidget(d)) {
             if (isPointInSelfOverHotseat(d.x, d.y)) {
-                Log.d(TAG, "setDropLayoutForDragObject: layout is hotseat");
+                LogUtil.d(TAG, "setDropLayoutForDragObject: layout is hotseat");
                 layout = mLauncher.getHotseat().getLayout();
             }
         }
@@ -2435,7 +2435,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             // Check if the item is dragged over left page
             mTempTouchCoordinates[0] = Math.min(centerX, d.x);
             mTempTouchCoordinates[1] = d.y;
-            Log.d(TAG, "setDropLayoutForDragObject: layout is over left page");
+            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is over left page");
             layout = verifyInsidePage(nextPage + (mIsRtl ? 1 : -1), mTempTouchCoordinates);
         }
 
@@ -2443,17 +2443,17 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             // Check if the item is dragged over right page
             mTempTouchCoordinates[0] = Math.max(centerX, d.x);
             mTempTouchCoordinates[1] = d.y;
-            Log.d(TAG, "setDropLayoutForDragObject: layout is over right page");
+            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is over right page");
             layout = verifyInsidePage(nextPage + (mIsRtl ? -1 : 1), mTempTouchCoordinates);
         }
 
         // Always pick the current page.
         if (layout == null && nextPage >= 0 && nextPage < getPageCount()) {
-            Log.d(TAG, "setDropLayoutForDragObject: layout is page "+nextPage);
+            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is page "+nextPage);
             layout = (CellLayout) getChildAt(nextPage);
         }
         if (layout != mDragTargetLayout) {
-            Log.d(TAG, "setDropLayoutForDragObject: layout != mDragTargetLayout ");
+            LogUtil.d(TAG, "setDropLayoutForDragObject: layout != mDragTargetLayout ");
             setCurrentDropLayout(layout);
             setCurrentDragOverlappingLayout(layout);
             return true;
