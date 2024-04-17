@@ -42,6 +42,7 @@ import android.os.Looper;
 import android.support.animation.FloatPropertyCompat;
 import android.support.animation.SpringAnimation;
 import android.support.animation.SpringForce;
+import android.util.Log;
 import android.view.View;
 
 import com.android.launcher3.FastBitmapDrawable;
@@ -58,6 +59,7 @@ import com.android.launcher3.anim.Interpolators;
 import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.ShortcutConfigActivityInfo;
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.graphics.IconNormalizer;
 import com.android.launcher3.graphics.LauncherIcons;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
@@ -73,6 +75,8 @@ import java.util.List;
 import static com.android.launcher3.ItemInfoWithIcon.FLAG_ICON_BADGED;
 
 public class DragView extends View {
+
+    private static final String TAG = "DragView";
     private static final ColorMatrix sTempMatrix1 = new ColorMatrix();
     private static final ColorMatrix sTempMatrix2 = new ColorMatrix();
 
@@ -199,11 +203,13 @@ public class DragView extends View {
     @TargetApi(Build.VERSION_CODES.O)
     public void setItemInfo(final ItemInfo info) {
         if (!(FeatureFlags.LAUNCHER3_SPRING_ICONS && Utilities.ATLEAST_OREO)) {
+            LogUtil.d(TAG, "setItemInfo:0000 ");
             return;
         }
         if (info.itemType != LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
                 info.itemType != LauncherSettings.Favorites.ITEM_TYPE_DEEP_SHORTCUT &&
                 info.itemType != LauncherSettings.Favorites.ITEM_TYPE_FOLDER) {
+            LogUtil.d(TAG, "setItemInfo: 111 ");
             return;
         }
         // Load the adaptive icon on a background thread and add the view in ui thread.

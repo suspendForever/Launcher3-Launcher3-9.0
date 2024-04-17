@@ -140,10 +140,11 @@ public class DragController implements DragDriver.EventListener, TouchController
      * @param dragRegion Coordinates within the bitmap b for the position of item being dragged.
      *          Makes dragging feel more precise, e.g. you can clip out a transparent border
      */
-    public DragView startDrag(Bitmap b, int dragLayerX, int dragLayerY,
+    public DragView  startDrag(Bitmap b, int dragLayerX, int dragLayerY,
             DragSource source, ItemInfo dragInfo, Point dragOffset, Rect dragRegion,
             float initialDragViewScale, float dragViewScaleOnDrop, DragOptions options) {
-        LogUtil.d(TAG, "startDrag: ");
+        LogUtil.d(TAG, "startDrag:dragOffset "+dragOffset);
+        LogUtil.d(TAG, "startDrag:dragRegion "+dragRegion);
         if (PROFILE_DRAWING_DURING_DRAG) {
             android.os.Debug.startMethodTracing("Launcher");
         }
@@ -153,6 +154,7 @@ public class DragController implements DragDriver.EventListener, TouchController
 
         mOptions = options;
         if (mOptions.systemDndStartPoint != null) {
+            LogUtil.d(TAG, "startDrag: mOptions.systemDndStartPoint!=null");
             mMotionDownX = mOptions.systemDndStartPoint.x;
             mMotionDownY = mOptions.systemDndStartPoint.y;
         }
@@ -160,6 +162,7 @@ public class DragController implements DragDriver.EventListener, TouchController
         final int registrationX = mMotionDownX - dragLayerX;
         final int registrationY = mMotionDownY - dragLayerY;
 
+        //对于widget来说 以下两值都为0
         final int dragRegionLeft = dragRegion == null ? 0 : dragRegion.left;
         final int dragRegionTop = dragRegion == null ? 0 : dragRegion.top;
 
@@ -171,6 +174,7 @@ public class DragController implements DragDriver.EventListener, TouchController
                 && !mOptions.preDragCondition.shouldStartDrag(0);
 
         final Resources res = mLauncher.getResources();
+        LogUtil.d(TAG, "startDrag:mIsInPreDrag "+mIsInPreDrag);
         final float scaleDps = mIsInPreDrag
                 ? res.getDimensionPixelSize(R.dimen.pre_drag_view_scale) : 0f;
         //创建拖拽view

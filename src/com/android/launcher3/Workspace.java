@@ -1576,7 +1576,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             });
         }
 
-        beginDragShared(child, this, options);
+        beginDragShared(child , this, options);
     }
 
     public void beginDragShared(View child, DragSource source, DragOptions options) {
@@ -1627,6 +1627,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         DeviceProfile grid = mLauncher.getDeviceProfile();
         Point dragVisualizeOffset = null;
         Rect dragRect = null;
+        //对于widget来说没啥用 ++
         if (child instanceof BubbleTextView) {
             dragRect = new Rect();
             ((BubbleTextView) child).getIconBounds(dragRect);
@@ -1648,6 +1649,8 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             icon.clearPressedBackground();
         }
 
+        //对于widget来说没啥用 --
+        //对于widget来说没啥用 ++
         if (child.getParent() instanceof ShortcutAndWidgetContainer) {
             mDragSourceInternal = (ShortcutAndWidgetContainer) child.getParent();
         }
@@ -1661,6 +1664,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
                 mLauncher.getUserEventDispatcher().resetElapsedContainerMillis("dragging started");
             }
         }
+        //对于widget来说没啥用 --
 
         DragView dv = mDragController.startDrag(b, dragLayerX, dragLayerY, source,
                 dragObject, dragVisualizeOffset, dragRect, scale * iconScale, scale, dragOptions);
@@ -2393,6 +2397,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
                 // Otherwise, if we aren't adding to or creating a folder and there's no pending
                 // reorder, then we schedule a reorder
+                //否则，如果我们没有添加或创建文件夹，并且没有待处理的重新排序，则我们会安排重新排序
                 ReorderAlarmListener listener = new ReorderAlarmListener(mDragViewVisualCenter,
                         minSpanX, minSpanY, item.spanX, item.spanY, d, child);
                 mReorderAlarm.setOnAlarmListener(listener);
@@ -2431,6 +2436,8 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
 
         int nextPage = getNextPage();
+        LogUtil.d(TAG,"next page is "+nextPage);
+        LogUtil.d(TAG,"mIsRtl is "+mIsRtl);
         if (layout == null && !isPageInTransition()) {
             // Check if the item is dragged over left page
             mTempTouchCoordinates[0] = Math.min(centerX, d.x);

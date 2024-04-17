@@ -108,6 +108,7 @@ class SystemDragDriver extends DragDriver {
 
     SystemDragDriver(DragController dragController, Context context, DragObject dragObject) {
         super(dragController);
+        LogUtil.d(TAG, "SystemDragDriver: constructor");
     }
 
     @Override
@@ -165,8 +166,11 @@ class SystemDragDriver extends DragDriver {
  * Class for driving an internal (i.e. not using framework) drag/drop operation.
  */
 class InternalDragDriver extends DragDriver {
+
+    private static final String TAG = "InternalDragDriver";
     InternalDragDriver(DragController dragController) {
         super(dragController);
+        LogUtil.d(TAG, "InternalDragDriver: constructor");
     }
 
     @Override
