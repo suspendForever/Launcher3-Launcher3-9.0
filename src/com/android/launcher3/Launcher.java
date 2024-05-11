@@ -927,6 +927,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
         mFocusHandler = mDragLayer.getFocusIndicatorHelper();
         mWorkspace = mDragLayer.findViewById(R.id.workspace);
         mWorkspace.initParentViews(mDragLayer);
+        mWorkspace.enableFreeScroll(false);
         mOverviewPanel = findViewById(R.id.overview_panel);
         mOverviewPanelContainer = findViewById(R.id.overview_panel_container);
         mHotseat = findViewById(R.id.hotseat);

@@ -37,7 +37,10 @@ public class UiFactory {
 
     public static StateHandler[] getStateHandler(Launcher launcher) {
         return new StateHandler[] {
-                launcher.getAllAppsController(), launcher.getWorkspace() };
+                launcher.getAllAppsController(),
+                //add by lhm
+//                launcher.getWorkspace()
+        };
     }
 
     public static void resetOverview(Launcher launcher) { }

@@ -84,6 +84,7 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
 
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSpecSize =  MeasureSpec.getSize(heightMeasureSpec);
+        Log.d("test0510", "onMeasure: widthSpecSize:"+widthSpecSize);
         setMeasuredDimension(widthSpecSize, heightSpecSize);
 
         for (int i = 0; i < count; i++) {

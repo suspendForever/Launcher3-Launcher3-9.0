@@ -35,12 +35,14 @@ import android.animation.AnimatorSet;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.IntDef;
+import android.util.Log;
 
 import com.android.launcher3.anim.AnimationSuccessListener;
 import com.android.launcher3.anim.AnimatorPlaybackController;
 import com.android.launcher3.anim.AnimatorSetBuilder;
 import com.android.launcher3.anim.PropertySetter;
 import com.android.launcher3.anim.PropertySetter.AnimatedPropertySetter;
+import com.android.launcher3.developerspace.LogUtil;
 import com.android.launcher3.uioverrides.UiFactory;
 
 import java.lang.annotation.Retention;
@@ -61,8 +63,7 @@ import java.util.ArrayList;
  *          - from center screen
  *          - from other screens
  *   - Launch app from workspace and quit
- *          - with back
- *          - with home
+ *          - with back *          - with home
  *   - Launch app from all apps and quit
  *          - with back
  *          - with home
@@ -200,8 +201,12 @@ public class LauncherStateManager {
 
     private void goToState(LauncherState state, boolean animated, long delay,
             final Runnable onCompleteRunnable) {
+        LogUtil.d(TAG, "goToState: state:"+state+" animated:"+animated+" onCompleteRunnable:"+onCompleteRunnable);
         if (mLauncher.isInState(state)) {
+            LogUtil.d(TAG, "goToState: isInState");
             if (mConfig.mCurrentAnimation == null) {
+                LogUtil.d(TAG, "goToState: isInState mCurrentAnimation ==null");
+
                 // Run any queued runnable
                 if (onCompleteRunnable != null) {
                     onCompleteRunnable.run();
@@ -209,6 +214,7 @@ public class LauncherStateManager {
                 return;
             } else if (!mConfig.userControlled && animated && mConfig.mTargetState == state) {
                 // We are running the same animation as requested
+                LogUtil.d(TAG, "goToState: isInState mCurrentAnimation !=null");
                 if (onCompleteRunnable != null) {
                     mConfig.mCurrentAnimation.addListener(new AnimationSuccessListener() {
                         @Override

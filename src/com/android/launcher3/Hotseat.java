@@ -22,6 +22,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,16 +33,18 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.logging.FileLog;
 import com.android.launcher3.logging.UserEventDispatcher.LogContainerProvider;
 import com.android.launcher3.userevent.nano.LauncherLogProto.Action;
 import com.android.launcher3.userevent.nano.LauncherLogProto.ContainerType;
 import com.android.launcher3.userevent.nano.LauncherLogProto.ControlType;
 import com.android.launcher3.userevent.nano.LauncherLogProto.Target;
 
-public class Hotseat extends FrameLayout implements LogContainerProvider, Insettable {
+public class Hotseat extends ViewGroup implements LogContainerProvider, Insettable {
 
     private final Launcher mLauncher;
     private CellLayout mContent;
+    private int mLastX;
 
     @ViewDebug.ExportedProperty(category = "launcher")
     private boolean mHasVerticalHotseat;
@@ -90,7 +93,7 @@ public class Hotseat extends FrameLayout implements LogContainerProvider, Insett
         if (hasVerticalHotseat) {
             mContent.setGridSize(1, idp.numHotseatIcons);
         } else {
-            mContent.setGridSize(idp.numHotseatIcons, 1);
+            mContent.setGridSize(idp.numHotseatIcons*2, 1);
         }
 
         if (!FeatureFlags.NO_ALL_APPS_ICON) {
@@ -137,8 +140,60 @@ public class Hotseat extends FrameLayout implements LogContainerProvider, Insett
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         // We don't want any clicks to go through to the hotseat unless the workspace is in
         // the normal state or an accessible drag is in progress.
-        return !mLauncher.getWorkspace().workspaceIconsCanBeDragged() &&
-                !mLauncher.getAccessibilityDelegate().isInAccessibleDrag();
+//        return !mLauncher.getWorkspace().workspaceIconsCanBeDragged() &&
+//                !mLauncher.getAccessibilityDelegate().isInAccessibleDrag();
+        //add by lhm
+        return !mLauncher.getWorkspace().workspaceIconsCanBeDragged() ;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        Log.d("test0510", "onTouchEvent: "+ev.getAction());
+        int x = (int) ev.getX();
+        Log.d("test0510", "onTouchEvent: x:"+x);
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                mLastX = x;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int dx = mLastX - x;
+                int oldScrollX = getScrollX();//原来的偏移量
+                int preScrollX = oldScrollX + dx;//本次滑动后形成的偏移量
+                if(preScrollX > getWidth()){
+                    preScrollX =  getWidth();
+                }
+                if(preScrollX < 0){
+                    preScrollX = 0;
+                }
+                scrollTo(preScrollX,getScrollY());
+                mLastX = x;
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int spec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec) * 2, MeasureSpec.getMode(widthMeasureSpec));
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childView = getChildAt(i);
+            // 为ScrollerLayout中的每一个子控件测量大小
+            measureChild(childView, spec, heightMeasureSpec);
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int childCount = getChildCount();
+        int left = 0;
+        for (int i = 0; i < childCount; i++) {
+            View childView = getChildAt(i);
+            // 为ScrollerLayout中的每一个子控件在水平方向上进行布局
+            childView.layout(left, 0, left + childView.getMeasuredWidth(), childView.getMeasuredHeight());
+            left += childView.getMeasuredWidth();
+        }
     }
 
     @Override
@@ -148,6 +203,8 @@ public class Hotseat extends FrameLayout implements LogContainerProvider, Insett
         targetParent.containerType = ContainerType.HOTSEAT;
     }
 
+    //add by lhm
+    //此处确定hotseat的布局
     @Override
     public void setInsets(Rect insets) {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) getLayoutParams();

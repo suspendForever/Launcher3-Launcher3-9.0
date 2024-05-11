@@ -405,6 +405,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         // When a accessible drag is started by the folder, we only allow rearranging withing the
         // folder.
         boolean addNewPage = !(options.isAccessibleDrag && dragObject.dragSource != this);
+        addNewPage=false;
 
         if (addNewPage) {
             mDeferRemoveExtraEmptyScreen = false;
@@ -421,7 +422,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
                 for (int pageIndex = currentPage; pageIndex < getPageCount(); pageIndex++) {
                     CellLayout page = (CellLayout) getPageAt(pageIndex);
                     if (page.hasReorderSolution(dragObject.dragInfo)) {
-                        setCurrentPage(pageIndex);
+                         setCurrentPage(pageIndex);
                         break;
                     }
                 }
@@ -429,6 +430,8 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
 
         // Always enter the spring loaded mode
+        //状态机进入编辑模式,让workspace 进入编辑状态 包括缩小每个页的大小
+        LogUtil.d(TAG, "onDragStart: go spring_loaded");
         mLauncher.getStateManager().goToState(SPRING_LOADED);
     }
 
@@ -1521,6 +1524,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     @Override
     public void setStateWithAnimation(LauncherState toState,
                                       AnimatorSetBuilder builder, AnimationConfig config) {
+        //workspace进入编辑模式的动画
         StateTransitionListener listener = new StateTransitionListener(toState);
         mStateTransitionAnimation.setStateWithAnimation(toState, builder, config);
 
@@ -2339,8 +2343,10 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         if (setDropLayoutForDragObject(d, mDragViewVisualCenter[0], mDragViewVisualCenter[1])) {
             LogUtil.d(TAG, "onDragOver: 当前页 与 mDragTargetLayout 不同");
             if (mLauncher.isHotseatLayout(mDragTargetLayout)) {
+                //没用
                 mSpringLoadedDragController.cancel();
             } else {
+                //1.当前页与设置页不同 将触发自动翻页
                 LogUtil.d(TAG, "onDragOver: setAlarm :"+mDragTargetLayout);
                 mSpringLoadedDragController.setAlarm(mDragTargetLayout);
             }
@@ -2382,8 +2388,9 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
                             mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1], item.spanX,
                     item.spanY, child, mTargetCell);
 
+            //如果最近的区域没被占领,显示边界线
             if (!nearestDropOccupied) {
-                Log.d(TAG, "onDragOver: is not nearestDropOccupied");
+                LogUtil.d(TAG, "onDragOver: is not nearestDropOccupied");
                 mDragTargetLayout.visualizeDropLocation(child, mOutlineProvider,
                         mTargetCell[0], mTargetCell[1], item.spanX, item.spanY, false, d);
             } else if ((mDragMode == DRAG_MODE_NONE || mDragMode == DRAG_MODE_REORDER)
@@ -2436,22 +2443,21 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
 
         int nextPage = getNextPage();
-        LogUtil.d(TAG,"next page is "+nextPage);
-        LogUtil.d(TAG,"mIsRtl is "+mIsRtl);
+        LogUtil.d(TAG,"setDropLayoutForDragObject next page is "+nextPage);
         if (layout == null && !isPageInTransition()) {
             // Check if the item is dragged over left page
             mTempTouchCoordinates[0] = Math.min(centerX, d.x);
             mTempTouchCoordinates[1] = d.y;
-            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is over left page");
-            layout = verifyInsidePage(nextPage + (mIsRtl ? 1 : -1), mTempTouchCoordinates);
+//            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is over left page");
+            layout = verifyInsidePage(nextPage - 1, mTempTouchCoordinates);
         }
 
         if (layout == null && !isPageInTransition()) {
             // Check if the item is dragged over right page
             mTempTouchCoordinates[0] = Math.max(centerX, d.x);
             mTempTouchCoordinates[1] = d.y;
-            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is over right page");
-            layout = verifyInsidePage(nextPage + (mIsRtl ? -1 : 1), mTempTouchCoordinates);
+//            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is over right page");
+            layout = verifyInsidePage(nextPage + 1, mTempTouchCoordinates);
         }
 
         // Always pick the current page.

@@ -52,6 +52,9 @@ abstract class BaseFlags {
     // When enabled shows a work profile tab in all apps
     public static final boolean ALL_APPS_TABS_ENABLED = true;
 
+    //add by lhm
+    public static final boolean REMOVE_DRAWER = false;
+
     // When true, overview shows screenshots in the orientation they were taken rather than
     // trying to make them fit the orientation the device is in.
     public static final boolean OVERVIEW_USE_SCREENSHOT_ORIENTATION = true;

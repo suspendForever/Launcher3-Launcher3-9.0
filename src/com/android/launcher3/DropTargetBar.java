@@ -119,7 +119,8 @@ public class DropTargetBar extends FrameLayout
     }
 
     public void setup(DragController dragController) {
-        dragController.addDragListener(this);
+        //取消进入拖拽以后的顶部的remove 和 uninstall
+//        dragController.addDragListener(this);
         for (int i = 0; i < mDropTargets.length; i++) {
             dragController.addDragListener(mDropTargets[i]);
             dragController.addDropTarget(mDropTargets[i]);
