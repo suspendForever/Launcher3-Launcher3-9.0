@@ -76,8 +76,7 @@ public class ModelWriter {
         item.container = container;
         item.cellX = cellX;
         item.cellY = cellY;
-        // We store hotseat items in canonical form which is this orientation invariant position
-        // in the hotseat
+        // We store hotseat items in canonical form which is this orientation invariant position in the hotseat
         if (container == Favorites.CONTAINER_HOTSEAT) {
             item.screenId = mHasVerticalHotseat
                     ? LauncherAppState.getIDP(mContext).numHotseatIcons - cellY - 1 : cellX;
@@ -180,6 +179,7 @@ public class ModelWriter {
     }
 
     /**
+     * 修改celllayout中item位置变化
      * Move and/or resize item in the DB to a new <container, screen, cellX, cellY, spanX, spanY>
      */
     public void modifyItemInDatabase(final ItemInfo item,

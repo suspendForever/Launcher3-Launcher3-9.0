@@ -67,6 +67,7 @@ import com.android.launcher3.badge.FolderBadgeInfo;
 import com.android.launcher3.compat.AppWidgetManagerCompat;
 import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.developerspace.LogUtil;
+import com.android.launcher3.dragndrop.CustomSpringLoadedDragController;
 import com.android.launcher3.dragndrop.DragController;
 import com.android.launcher3.dragndrop.DragLayer;
 import com.android.launcher3.dragndrop.DragOptions;
@@ -197,7 +198,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     float[] mDragViewVisualCenter = new float[2];
     private final float[] mTempTouchCoordinates = new float[2];
 
-    private SpringLoadedDragController mSpringLoadedDragController;
+    private CustomSpringLoadedDragController mSpringLoadedDragController;
 
     private boolean mIsSwitchingState = false;
 
@@ -405,7 +406,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         // When a accessible drag is started by the folder, we only allow rearranging withing the
         // folder.
         boolean addNewPage = !(options.isAccessibleDrag && dragObject.dragSource != this);
-        addNewPage=false;
+        addNewPage = false;
 
         if (addNewPage) {
             mDeferRemoveExtraEmptyScreen = false;
@@ -422,7 +423,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
                 for (int pageIndex = currentPage; pageIndex < getPageCount(); pageIndex++) {
                     CellLayout page = (CellLayout) getPageAt(pageIndex);
                     if (page.hasReorderSolution(dragObject.dragInfo)) {
-                         setCurrentPage(pageIndex);
+                        setCurrentPage(pageIndex);
                         break;
                     }
                 }
@@ -515,19 +516,22 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         }
         // Add the first page
         CellLayout firstPage = insertNewWorkspaceScreen(Workspace.FIRST_SCREEN_ID, 0);
-        // Always add a QSB on the first screen.
-        if (qsb == null) {
-            // In transposed layout, we add the QSB in the Grid. As workspace does not touch the
-            // edges, we do not need a full width QSB.
-            qsb = LayoutInflater.from(getContext())
-                    .inflate(R.layout.search_container_workspace, firstPage, false);
-        }
 
-        CellLayout.LayoutParams lp = new CellLayout.LayoutParams(0, 0, firstPage.getCountX(), 1);
-        lp.canReorder = false;
-        if (!firstPage.addViewToCellLayout(qsb, 0, R.id.search_container_workspace, lp, true)) {
-            Log.e(TAG, "Failed to add to item at (0, 0) to CellLayout");
-        }
+        // Always add a QSB on the first screen.
+        //add by lhm
+//        if (qsb == null) {
+//            // In transposed layout, we add the QSB in the Grid. As workspace does not touch the
+//            // edges, we do not need a full width QSB.
+//            qsb = LayoutInflater.from(getContext())
+//                    .inflate(R.layout.search_container_workspace, firstPage, false);
+//        }
+//
+//        CellLayout.LayoutParams lp = new CellLayout.LayoutParams(0, 0, firstPage.getCountX(), 1);
+//        lp.canReorder = false;
+
+//        if (!firstPage.addViewToCellLayout(qsb, 0, R.id.search_container_workspace, lp, true)) {
+//            Log.e(TAG, "Failed to add to item at (0, 0) to CellLayout");
+//        }
     }
 
     /**
@@ -882,12 +886,18 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     public void addInScreenFromBind(View child, ItemInfo info) {
         int x = info.cellX;
         int y = info.cellY;
-        if (info.container == LauncherSettings.Favorites.CONTAINER_HOTSEAT) {
-            int screenId = (int) info.screenId;
-            x = mLauncher.getHotseat().getCellXFromOrder(screenId);
-            y = mLauncher.getHotseat().getCellYFromOrder(screenId);
+        //add by lhm
+//        if (info.container == LauncherSettings.Favorites.CONTAINER_HOTSEAT) {
+//            int screenId = (int) info.screenId;
+//            x = mLauncher.getHotseat().getCellXFromOrder(screenId);
+//            y = mLauncher.getHotseat().getCellYFromOrder(screenId);
+//        }
+        if(info.container == LauncherSettings.Favorites.CONTAINER_HOTSEAT){
+            Log.d("test0522", "addInScreenFromBind: "+info);
+            addInScreen(child, info.container, info.screenId, x, y, info.spanX, info.spanY);
         }
-        addInScreen(child, info.container, info.screenId, x, y, info.spanX, info.spanY);
+        //add by lhm
+//        addInScreen(child, info.container, info.screenId, x, y, info.spanX, info.spanY);
     }
 
     /**
@@ -1580,7 +1590,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             });
         }
 
-        beginDragShared(child , this, options);
+        beginDragShared(child, this, options);
     }
 
     public void beginDragShared(View child, DragSource source, DragOptions options) {
@@ -1598,6 +1608,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
     /**
      * 将itemInfo生成一个供拖拽的view
+     *
      * @param child
      * @param source
      * @param dragObject
@@ -2340,15 +2351,18 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
         mDragViewVisualCenter = d.getVisualCenter(mDragViewVisualCenter);
 
         final View child = (mDragInfo == null) ? null : mDragInfo.cell;
-        if (setDropLayoutForDragObject(d, mDragViewVisualCenter[0], mDragViewVisualCenter[1])) {
+        int direction=setDropLayoutForDragObject(d, mDragViewVisualCenter[0], mDragViewVisualCenter[1]);
+        if (direction!=0) {
             LogUtil.d(TAG, "onDragOver: 当前页 与 mDragTargetLayout 不同");
-            if (mLauncher.isHotseatLayout(mDragTargetLayout)) {
+            if (!mLauncher.isHotseatLayout(mDragTargetLayout)) {
                 //没用
+                Log.d("test0514", "onDragOver:mSpringLoadedDragController.cancel() ");
                 mSpringLoadedDragController.cancel();
             } else {
                 //1.当前页与设置页不同 将触发自动翻页
-                LogUtil.d(TAG, "onDragOver: setAlarm :"+mDragTargetLayout);
-                mSpringLoadedDragController.setAlarm(mDragTargetLayout);
+                LogUtil.d(TAG, "onDragOver: setAlarm :" + mDragTargetLayout);
+                Log.d("test0514", "onDragOver: direction:"+direction);
+                mSpringLoadedDragController.setAlarm(direction);
             }
         }
 
@@ -2432,18 +2446,24 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
      *
      * @return whether the layout is different from the current {@link #mDragTargetLayout}.
      */
-    private boolean setDropLayoutForDragObject(DragObject d, float centerX, float centerY) {
+    private int setDropLayoutForDragObject(DragObject d, float centerX, float centerY) {
         CellLayout layout = null;
         // Test to see if we are over the hotseat first
-        if (mLauncher.getHotseat() != null && !isDragWidget(d)) {
+        if (mLauncher.getHotseat() != null ) {
             if (isPointInSelfOverHotseat(d.x, d.y)) {
                 LogUtil.d(TAG, "setDropLayoutForDragObject: layout is hotseat");
+                mTempTouchCoordinates[0] = Math.min(centerX, d.x);
+                mTempTouchCoordinates[1] = d.y;
                 layout = mLauncher.getHotseat().getLayout();
+                setCurrentDropLayout(layout);
+                setCurrentDragOverlappingLayout(layout);
+                return verifyInsideHotSeatArea(mLauncher.getHotseat(),mTempTouchCoordinates);
             }
         }
 
+
         int nextPage = getNextPage();
-        LogUtil.d(TAG,"setDropLayoutForDragObject next page is "+nextPage);
+        LogUtil.d(TAG, "setDropLayoutForDragObject next page is " + nextPage);
         if (layout == null && !isPageInTransition()) {
             // Check if the item is dragged over left page
             mTempTouchCoordinates[0] = Math.min(centerX, d.x);
@@ -2462,16 +2482,17 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
         // Always pick the current page.
         if (layout == null && nextPage >= 0 && nextPage < getPageCount()) {
-            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is page "+nextPage);
+            LogUtil.d(TAG, "setDropLayoutForDragObject: layout is page " + nextPage);
             layout = (CellLayout) getChildAt(nextPage);
         }
         if (layout != mDragTargetLayout) {
             LogUtil.d(TAG, "setDropLayoutForDragObject: layout != mDragTargetLayout ");
             setCurrentDropLayout(layout);
             setCurrentDragOverlappingLayout(layout);
-            return true;
+//            return true;
         }
-        return false;
+        return 0;
+//        return false;
     }
 
     /**
@@ -2488,6 +2509,22 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
             }
         }
         return null;
+    }
+
+    private int verifyInsideHotSeatArea(Hotseat hotseat, float[] touchXy) {
+        mapPointFromSelfToChild(hotseat, touchXy);
+        float width = hotseat.getWidth();
+        if (touchXy[0] >= width * 4 / 5 &&
+                touchXy[1] >= 0 && touchXy[1] <= hotseat.getHeight()) {
+            // This point is inside the cell layout
+            return 1;
+        }
+        if (touchXy[0] > 0 && touchXy[0] <= width * 1 / 5 &&
+                touchXy[1] >= 0 && touchXy[1] <= hotseat.getHeight()) {
+            // This point is inside the cell layout
+            return -1;
+        }
+        return 0;
     }
 
     private void manageFolderFeedback(CellLayout targetLayout,
@@ -2611,6 +2648,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
 
     /**
      * 我们希望工作区具有显示的整个区域（它将在现有的拖放逻辑中找到要拖放到的正确单元格布局
+     *
      * @param outRect
      */
     @Override
@@ -2956,7 +2994,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     void setup(DragController dragController) {
-        mSpringLoadedDragController = new SpringLoadedDragController(mLauncher);
+        mSpringLoadedDragController = new CustomSpringLoadedDragController(mLauncher);
         mDragController = dragController;
 
         // hardware layers on children are enabled on startup, but should be disabled until

@@ -27,6 +27,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -39,12 +40,19 @@ import com.android.launcher3.userevent.nano.LauncherLogProto.Action;
 import com.android.launcher3.userevent.nano.LauncherLogProto.ContainerType;
 import com.android.launcher3.userevent.nano.LauncherLogProto.ControlType;
 import com.android.launcher3.userevent.nano.LauncherLogProto.Target;
+import com.android.launcher3.views.OptionsPopupView;
 
 public class Hotseat extends ViewGroup implements LogContainerProvider, Insettable {
 
     private final Launcher mLauncher;
     private CellLayout mContent;
     private int mLastX;
+
+    private boolean isScrolling = false;
+
+    public static final int MULTIPE = 2;
+
+    public static final int HOTSEAT_ROWS=6;
 
     @ViewDebug.ExportedProperty(category = "launcher")
     private boolean mHasVerticalHotseat;
@@ -60,6 +68,7 @@ public class Hotseat extends ViewGroup implements LogContainerProvider, Insettab
     public Hotseat(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mLauncher = Launcher.getLauncher(context);
+        setOnTouchListener(new HotSeatTouchListener(this, mLauncher));
     }
 
     public CellLayout getLayout() {
@@ -93,7 +102,7 @@ public class Hotseat extends ViewGroup implements LogContainerProvider, Insettab
         if (hasVerticalHotseat) {
             mContent.setGridSize(1, idp.numHotseatIcons);
         } else {
-            mContent.setGridSize(idp.numHotseatIcons*2, 1);
+            mContent.setGridSize(idp.numHotseatIcons , HOTSEAT_ROWS);
         }
 
         if (!FeatureFlags.NO_ALL_APPS_ICON) {
@@ -136,22 +145,62 @@ public class Hotseat extends ViewGroup implements LogContainerProvider, Insettab
         }
     }
 
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d("test0521", "dispatchTouchEvent: " + ev.getAction());
+        return super.dispatchTouchEvent(ev);
+    }
+
+    float startX = 0;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         // We don't want any clicks to go through to the hotseat unless the workspace is in
         // the normal state or an accessible drag is in progress.
 //        return !mLauncher.getWorkspace().workspaceIconsCanBeDragged() &&
 //                !mLauncher.getAccessibilityDelegate().isInAccessibleDrag();
+        Log.d("test0521", "onInterceptTouchEvent: " + ev.getAction());
+
         //add by lhm
-        return !mLauncher.getWorkspace().workspaceIconsCanBeDragged() ;
+        int action = ev.getAction();
+        float nowX = ev.getX();
+
+        if (action == MotionEvent.ACTION_DOWN) {
+            startX = ev.getX();
+            return super.onInterceptTouchEvent(ev);
+        }
+
+        if (action == MotionEvent.ACTION_MOVE) {
+            float scrollX = nowX - startX;
+            if (Math.abs(scrollX) > ViewConfiguration.get(this.getContext()).getScaledTouchSlop()) {
+                return true;
+            }
+            return super.onInterceptTouchEvent(ev);
+        }
+
+        if (action == MotionEvent.ACTION_UP) {
+            startX = 0;
+        }
+
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    public void smoothToDirectSmoothly(int direction) {
+        if (direction > 0) {
+            scrollBy(10, 0);
+        }
+        if (direction < 0 && getScrollX() > 0) {
+            scrollBy(-10, 0);
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.d("test0510", "onTouchEvent: "+ev.getAction());
+        Log.d("test0521", "onTouchEvent: " + ev.getAction());
         int x = (int) ev.getX();
-        Log.d("test0510", "onTouchEvent: x:"+x);
-        switch (ev.getAction()){
+        Log.d("test0510", "onTouchEvent: x:" + x);
+        switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = x;
                 break;
@@ -159,23 +208,32 @@ public class Hotseat extends ViewGroup implements LogContainerProvider, Insettab
                 int dx = mLastX - x;
                 int oldScrollX = getScrollX();//原来的偏移量
                 int preScrollX = oldScrollX + dx;//本次滑动后形成的偏移量
-                if(preScrollX > getWidth()){
-                    preScrollX =  getWidth();
+                if (preScrollX > getWidth()) {
+                    preScrollX = getWidth();
                 }
-                if(preScrollX < 0){
+                if (preScrollX < 0) {
                     preScrollX = 0;
                 }
-                scrollTo(preScrollX,getScrollY());
+                scrollTo(preScrollX, getScrollY());
                 mLastX = x;
-                break;
+                isScrolling = true;
+                return true;
+            case MotionEvent.ACTION_UP:
+                mLastX = 0;
         }
-        return true;
+        isScrolling = false;
+        return false;
+
+    }
+
+    public boolean isScrolling() {
+        return isScrolling;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int spec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec) * 2, MeasureSpec.getMode(widthMeasureSpec));
+        int spec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec) * MULTIPE, MeasureSpec.getMode(widthMeasureSpec));
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
@@ -220,12 +278,14 @@ public class Hotseat extends ViewGroup implements LogContainerProvider, Insettab
                 lp.width = grid.hotseatBarSizePx + insets.right + grid.hotseatBarSidePaddingPx;
             }
         } else {
-            lp.gravity = Gravity.BOTTOM;
+            lp.gravity = Gravity.CENTER;
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            lp.height = grid.hotseatBarSizePx + insets.bottom;
+            //add by lhm
+//            lp.height = (grid.hotseatBarSizePx + insets.bottom) * MULTIPE+50;
+            lp.height = LayoutParams.MATCH_PARENT;
         }
-        Rect padding = grid.getHotseatLayoutPadding();
-        getLayout().setPadding(padding.left, padding.top, padding.right, padding.bottom);
+//        Rect padding = grid.getHotseatLayoutPadding();
+//        getLayout().setPadding(padding.left, padding.top, padding.right, padding.bottom);
 
         setLayoutParams(lp);
         InsettableFrameLayout.dispatchInsets(this, insets);

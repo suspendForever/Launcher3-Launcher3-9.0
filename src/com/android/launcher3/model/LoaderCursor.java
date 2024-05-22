@@ -16,6 +16,8 @@
 
 package com.android.launcher3.model;
 
+import static com.android.launcher3.Hotseat.HOTSEAT_ROWS;
+
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
@@ -406,7 +408,7 @@ public class LoaderCursor extends CursorWrapper {
                     occupied.get((long) LauncherSettings.Favorites.CONTAINER_HOTSEAT);
 
             if (item.screenId >= mIDP.numHotseatIcons) {
-                Log.e(TAG, "Error loading shortcut " + item
+                Log.e("test0522", "Error loading shortcut " + item
                         + " into hotseat position " + item.screenId
                         + ", position out of bounds: (0 to " + (mIDP.numHotseatIcons - 1)
                         + ")");
@@ -414,18 +416,27 @@ public class LoaderCursor extends CursorWrapper {
             }
 
             if (hotseatOccupancy != null) {
-                if (hotseatOccupancy.cells[(int) item.screenId][0]) {
-                    Log.e(TAG, "Error loading shortcut into hotseat " + item
-                            + " into position (" + item.screenId + ":" + item.cellX + ","
-                            + item.cellY + ") already occupied");
-                    return false;
-                } else {
-                    hotseatOccupancy.cells[(int) item.screenId][0] = true;
+                //add by lhm
+                if (hotseatOccupancy.isRegionVacant(item.cellX,item.cellY,item.spanX,item.spanY)) {
+                    hotseatOccupancy.markCells(item,true);
                     return true;
+                }else{
+                    return false;
                 }
+//                if (hotseatOccupancy.cells[(int) item.screenId][0]) {
+//                    Log.e(TAG, "Error loading shortcut into hotseat " + item
+//                            + " into position (" + item.screenId + ":" + item.cellX + ","
+//                            + item.cellY + ") already occupied");
+//                    return false;
+//                } else {
+//                    hotseatOccupancy.cells[(int) item.screenId][0] = true;
+//                    return true;
+//                }
             } else {
-                final GridOccupancy occupancy = new GridOccupancy(mIDP.numHotseatIcons, 1);
-                occupancy.cells[(int) item.screenId][0] = true;
+                //add by lhm 修复widget存储问题 我真他妈牛比
+                final GridOccupancy occupancy = new GridOccupancy(mIDP.numHotseatIcons, HOTSEAT_ROWS);
+                occupancy.markCells(item,true);
+//                occupancy.cells[(int) item.screenId][0] = true;
                 occupied.put((long) LauncherSettings.Favorites.CONTAINER_HOTSEAT, occupancy);
                 return true;
             }

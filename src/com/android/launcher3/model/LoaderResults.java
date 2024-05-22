@@ -98,6 +98,7 @@ public class LoaderResults {
         synchronized (mBgDataModel) {
             workspaceItems.addAll(mBgDataModel.workspaceItems);
             appWidgets.addAll(mBgDataModel.appWidgets);
+            Log.d("test0522", "bindWorkspace: "+appWidgets.size());
             orderedScreenIds.addAll(mBgDataModel.workspaceScreens);
             mBgDataModel.lastBindId++;
         }

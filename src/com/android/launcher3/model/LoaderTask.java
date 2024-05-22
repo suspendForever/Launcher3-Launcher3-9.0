@@ -734,6 +734,7 @@ public class LoaderTask implements Runnable {
                                                 appWidgetInfo.pendingItemInfo, false);
                                     }
 
+                                    Log.d("test0522", "loadWorkspace: "+appWidgetInfo);
                                     loaderCursor.checkAndAddItem(appWidgetInfo, mBgDataModel);
                                 }
                                 break;

@@ -127,6 +127,9 @@ public class ItemLongClickListener {
         // Return early if an item is already being dragged (e.g. when long-pressing two shortcuts)
         if (launcher.getDragController().isDragging()) return false;
 
+        //add by lhm
+        if(launcher.getHotseat().isScrolling())return false;
+
         return true;
     }
 }
